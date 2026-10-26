@@ -1,8 +1,8 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</title>
   <style>
     :root {
@@ -29,10 +29,9 @@
       background-color: var(--cd-dark);
       color: var(--cd-text);
       font-family: var(--cd-font);
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
     }
 
     /* HEADER BAR */
@@ -44,6 +43,7 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
     }
 
     .brand {
@@ -63,7 +63,7 @@
     }
 
     .title {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: bold;
       letter-spacing: 2px;
       color: #fff;
@@ -99,14 +99,14 @@
       50% { opacity: 0.3; }
     }
 
-    /* MAIN CONTAINER */
+    /* MAIN CONTAINER (Expanded to scroll smoothly on smaller tablet screens) */
     main {
       flex: 1;
       padding: 20px;
       display: flex;
       justify-content: center;
-      align-items: center;
-      position: relative;
+      align-items: flex-start;
+      overflow-y: auto;
     }
 
     .bunker-card {
@@ -114,20 +114,17 @@
       border: 2px solid var(--cd-border);
       border-radius: 8px;
       width: 100%;
-      max-width: 900px;
-      height: 100%;
-      max-height: 580px;
+      max-width: 960px;
       display: flex;
       flex-direction: column;
       box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      position: relative;
-      overflow: hidden;
+      margin-bottom: 20px;
     }
 
     .card-header {
       background-color: #171c22;
       border-bottom: 1px solid var(--cd-border);
-      padding: 10px 20px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -136,20 +133,15 @@
     }
 
     .card-body {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
-    /* ROOM SECTIONS */
+    /* STAGES */
     .stage {
       display: none;
-      height: 100%;
       flex-direction: column;
-      justify-content: space-between;
     }
 
     .stage.active {
@@ -163,15 +155,60 @@
       letter-spacing: 1.5px;
     }
 
-    p {
-      line-height: 1.6;
-      font-size: 1.05rem;
-      color: var(--cd-text);
+    /* PROPORTIONAL VIDEO CONTAINER */
+    .media-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      background-color: #000;
+      border: 2px solid var(--cd-yellow);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* EXPANDED TRANSCRIPT BOX FOR EASY READING */
+    .transcript-box {
+      background-color: rgba(10, 14, 18, 0.85);
+      border: 1px solid var(--cd-border);
+      border-left: 5px solid var(--cd-yellow);
+      padding: 20px;
+      border-radius: 4px;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #f0f4f8;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .transcript-title {
+      color: var(--cd-yellow);
+      font-weight: bold;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
     }
 
     /* NAVIGATION / BUTTONS */
     .action-zone {
-      margin-top: 20px;
+      margin-top: 25px;
       padding-top: 20px;
       border-top: 1px dashed var(--cd-border);
       display: flex;
@@ -182,7 +219,7 @@
       background-color: var(--cd-yellow);
       color: #000;
       border: none;
-      padding: 14px 28px;
+      padding: 16px 32px;
       font-size: 1rem;
       font-weight: bold;
       font-family: inherit;
@@ -212,11 +249,12 @@
     footer {
       background-color: #0b0e11;
       border-top: 1px solid var(--cd-border);
-      padding: 10px 20px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      flex-shrink: 0;
     }
 
     .progress-tracker {
@@ -273,17 +311,19 @@
         <!-- =======================================================
              MAIN INTRODUCTION PAGE
         ======================================================== -->
-<section id="stage-0" class="stage active">
+        <section id="stage-0" class="stage active">
           <div>
             <h1>Message from Civil Defence</h1>
             
             <div class="media-container">
-              <!-- VIDEO CONTAINER (Replace video src or insert YouTube iframe) -->
-            <video controls playsinline preload="metadata">
-            <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
-            <source src="Tāmaki-river-video-Intro.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+              <!-- PROPORTIONAL VIDEO CONTAINER -->
+              <div class="video-wrapper">
+                <video controls playsinline preload="metadata">
+                  <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
+                  <source src="Tāmaki-river-video-Intro.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
 
               <!-- TRANSCRIPT DISPLAY -->
               <div class="transcript-box">
@@ -292,6 +332,13 @@
               </div>
             </div>
           </div>
+          
+          <!-- BUTTON PLACEHOLDER FOR NEXT STAGE -->
+          <div class="action-zone">
+            <button class="btn btn-danger" onclick="nextStage(1)">START INVESTIGATION (STAGE 1) →</button>
+          </div>
+        </section>
+
         <!-- =======================================================
              ROOM 1: STAGE 1
         ======================================================== -->
@@ -301,11 +348,9 @@
             <p>[PLACEHOLDER: Add Stage 1 puzzle/code here]</p>
           </div>
 
-          <!-- REPLACE THIS BLOCK WITH ROOM 1 PUZZLE LOGIC & CUSTOM BUTTON -->
           <div class="action-zone">
             <button class="btn" onclick="nextStage(2)">OVERRIDE GRID (STAGE 2) →</button>
           </div>
-          <!-- END ROOM 1 ACTION BLOCK -->
         </section>
 
         <!-- =======================================================
@@ -317,11 +362,9 @@
             <p>[PLACEHOLDER: Add Stage 2 puzzle/code here]</p>
           </div>
 
-          <!-- REPLACE THIS BLOCK WITH ROOM 2 PUZZLE LOGIC & CUSTOM BUTTON -->
           <div class="action-zone">
             <button class="btn" onclick="nextStage(3)">CLEAR PUMPS (STAGE 3) →</button>
           </div>
-          <!-- END ROOM 2 ACTION BLOCK -->
         </section>
 
         <!-- =======================================================
@@ -333,11 +376,9 @@
             <p>[PLACEHOLDER: Add Stage 3 puzzle/code here]</p>
           </div>
 
-          <!-- REPLACE THIS BLOCK WITH ROOM 3 PUZZLE LOGIC & CUSTOM BUTTON -->
           <div class="action-zone">
             <button class="btn" onclick="nextStage(4)">TRANSMIT SIGNAL (STAGE 4) →</button>
           </div>
-          <!-- END ROOM 3 ACTION BLOCK -->
         </section>
 
         <!-- =======================================================
@@ -349,11 +390,9 @@
             <p>[PLACEHOLDER: Add Stage 4 puzzle/code here]</p>
           </div>
 
-          <!-- REPLACE THIS BLOCK WITH ROOM 4 PUZZLE LOGIC & CUSTOM BUTTON -->
           <div class="action-zone">
             <button class="btn" onclick="nextStage(5)">STABILIZE SECTOR (STAGE 5) →</button>
           </div>
-          <!-- END ROOM 4 ACTION BLOCK -->
         </section>
 
         <!-- =======================================================
@@ -365,11 +404,9 @@
             <p>[PLACEHOLDER: Add Stage 5 puzzle/code here]</p>
           </div>
 
-          <!-- REPLACE THIS BLOCK WITH ROOM 5 PUZZLE LOGIC & CUSTOM BUTTON -->
           <div class="action-zone">
             <button class="btn btn-danger" onclick="nextStage(6)">UNSEAL BUNKER HATCH →</button>
           </div>
-          <!-- END ROOM 5 ACTION BLOCK -->
         </section>
 
         <!-- =======================================================
@@ -409,23 +446,17 @@
     let currentStage = 0;
 
     function nextStage(stageNumber) {
-      // Hide current room
       document.getElementById(`stage-${currentStage}`).classList.remove('active');
-      
-      // Update stage variable
       currentStage = stageNumber;
       
-      // Show next room
       const activeStage = document.getElementById(`stage-${currentStage}`);
       activeStage.classList.add('active');
 
-      // Update UI Header
       const stageLabel = document.getElementById('stage-id');
       if(currentStage === 0) stageLabel.innerText = 'SYS_ID: INTRO_PAGE';
       else if(currentStage === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
       else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${currentStage}`;
 
-      // Update UI Tracker Dots
       for (let i = 1; i <= 5; i++) {
         const dot = document.getElementById(`dot-${i}`);
         if (i < currentStage) {
@@ -437,7 +468,6 @@
         }
       }
 
-      // Update system indicator on completion
       if(currentStage === 6) {
         document.getElementById('system-status').className = 'indicator';
         document.getElementById('status-text').innerText = 'SYSTEM SECURE';
