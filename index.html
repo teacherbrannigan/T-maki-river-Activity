@@ -360,19 +360,111 @@
         <!-- =======================================================
              ROOM 1: STAGE 1
         ======================================================== -->
-        <section id="stage-1" class="stage">
+<section id="stage-1" class="stage">
           <div>
-            <h2>Stage 1: Power & Grid Distribution</h2>
-            <p>[PLACEHOLDER: Add Stage 1 puzzle/code here]</p>
+            <h2>Stage 1: Intelligence Analysis</h2>
+            
+            <!-- PART 1: 4-COLUMN DOSSIER LAYOUT -->
+            <div id="r1-part1">
+              <p>Review the 4 Civil Defence intelligence columns below to evaluate potential animals along the Tāmaki River.</p>
+
+              <div class="dossier-grid">
+                <div class="dossier-col">
+                  <div class="dossier-col-title">1. Marine Eguana</div>
+                  Acording to sightings the animal in the Tāmaki river has scaly skin like a reptile rather then fish scales. Might be an invasive species coming in and the floods are coincedental. 
+                </div>
+
+                <div class="dossier-col">
+                  <div class="dossier-col-title">2. Longfin Eel (Tuna)</div>
+                  Native to NZ but not ususually found in the river since it got so polluted. Maybe one has gotten larger then normal but again no link to the flooding.
+                </div>
+
+                <div class="dossier-col">
+                  <div class="dossier-col-title">3. Octopus/ squid</div>
+                  Some witnesses say that the animal had alot of limbs trainling behind it when it moved and there are cases of large animals of these species, however, they are salt water creatures so they wouldn't be able stay long.
+                </div>
+
+                <div class="dossier-col">
+                  <div class="dossier-col-title">4. Taniwha</div>
+                  Aincent myths that used to live in waterways, some of the locals belive it could be one of themand would explain the link between the flooding and the apperance of the animal. 
+                </div>
+              </div>
+
+              <h3>Step 1 Check: If it is a taniwha which one would it be?</h3>
+              <div class="quiz-options-grid">
+                <button class="opt-btn" onclick="checkPart1(1)">A) An industrial dam breach at Panmure Basin.</button>
+                <button class="opt-btn" onclick="checkPart1(2)">B) Subterranean water displacement along ancient channels by the creature.</button>
+                <button class="opt-btn" onclick="checkPart1(3)">C) Heavy tidal surges coming exclusively from the Manukau Harbour.</button>
+                <button class="opt-btn" onclick="checkPart1(4)">D) A volcanic geothermal eruption under Māngere Mountain.</button>
+              </div>
+              <div id="p1-feedback" class="feedback-alert"></div>
+            </div>
+
+            <!-- PART 2: INTERMEDIATE VIDEO -->
+            <div id="r1-part2" style="display: none;">
+              <h3 style="color: var(--cd-green);">✓ Step 1 Cleared: Classified Update Unlocked</h3>
+              
+              <div class="media-container">
+                <div class="video-wrapper">
+                  <video controls playsinline preload="metadata">
+                    <source src="./room1_video.mp4" type="video/mp4">
+                    <source src="room1_video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+
+                <div class="transcript-box">
+                  <div class="transcript-title">Broadcast Update Transcript:</div>
+                  <p style="margin: 0;">"Emergency sensors confirm the creature has taken refuge in Parnell Lagoon. It is reacting strongly to environmental disturbances. We must identify its true nature using historical visual records before authorized field units intervene."</p>
+                </div>
+              </div>
+
+              <div class="action-zone">
+                <button class="btn" onclick="showPart3()">PROCEED TO VISUAL IDENTIFICATION →</button>
+              </div>
+            </div>
+
+            <!-- PART 3: 4 POP-UP OPTION CARDS -->
+            <div id="r1-part3" style="display: none;">
+              <h3>Step 2 Check: Inspect Visual Profiles (Click cards to view details)</h3>
+              <p>Click on each card to review pop-up dossier details, then choose the correct visual profile below.</p>
+
+              <div class="image-cards-grid">
+                <div class="img-card" onclick="openModal(1)">
+                  <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&q=80" alt="Submersible">
+                  <div class="img-card-title">Option A: Submersible</div>
+                  <span style="font-size: 0.75rem; color: var(--cd-yellow);">[CLICK TO OPEN DOSSIER]</span>
+                </div>
+
+                <div class="img-card" onclick="openModal(2)">
+                  <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80" alt="Taniwha Guardian">
+                  <div class="img-card-title">Option B: Guardian Taniwha</div>
+                  <span style="font-size: 0.75rem; color: var(--cd-yellow);">[CLICK TO OPEN DOSSIER]</span>
+                </div>
+
+                <div class="img-card" onclick="openModal(3)">
+                  <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80" alt="Sandbar">
+                  <div class="img-card-title">Option C: Shift Sandbar</div>
+                  <span style="font-size: 0.75rem; color: var(--cd-yellow);">[CLICK TO OPEN DOSSIER]</span>
+                </div>
+
+                <div class="img-card" onclick="openModal(4)">
+                  <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=400&q=80" alt="Invasive Flora">
+                  <div class="img-card-title">Option D: Invasive Flora</div>
+                  <span style="font-size: 0.75rem; color: var(--cd-yellow);">[CLICK TO OPEN DOSSIER]</span>
+                </div>
+              </div>
+
+              <div id="p3-feedback" class="feedback-alert"></div>
+            </div>
+
           </div>
 
-          <!-- REPLACE THIS BLOCK WITH ROOM 1 PUZZLE LOGIC & CUSTOM BUTTON -->
-          <div class="action-zone">
-            <button class="btn" onclick="nextStage(2)">OVERRIDE GRID (STAGE 2) →</button>
+          <!-- NEXT ROOM BUTTON (UNLOCKED AFTER STEP 2) -->
+          <div class="action-zone" id="r1-final-action" style="display: none;">
+            <button class="btn btn-danger" onclick="nextStage(2)">ENTER ROOM 2: CONTROL CENTRE →</button>
           </div>
-          <!-- END ROOM 1 ACTION BLOCK -->
         </section>
-
         <!-- =======================================================
              ROOM 2: STAGE 2
         ======================================================== -->
