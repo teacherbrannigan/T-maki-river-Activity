@@ -1,1139 +1,427 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-  <meta charset="UTF-8" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-
-  <title>NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</title>
-
-  <style>
-
-    :root {
-
-      --cd-yellow: #ffcc00;
-
-      --cd-orange: #ff6600;
-
-      --cd-blue: #003366;
-
-      --cd-dark: #12161a;
-
-      --cd-panel: #1e242b;
-
-      --cd-border: #333d47;
-
-      --cd-green: #00ff66;
-
-      --cd-text: #e1e6eb;
-
-      --cd-font: "Courier New", Courier, monospace, sans-serif;
-
-    }
-
-
-
-    * {
-
-      box-sizing: border-box;
-
-      user-select: none;
-
-      -webkit-user-select: none;
-
-    }
-
-
-
-    body {
-
-      margin: 0;
-
-      padding: 0;
-
-      background-color: var(--cd-dark);
-
-      color: var(--cd-text);
-
-      font-family: var(--cd-font);
-
-      height: 100vh;
-
-      display: flex;
-
-      flex-direction: column;
-
-      overflow: hidden;
-
-    }
-
-
-
-    /* HEADER BAR */
-
-    header {
-
-      background-color: var(--cd-blue);
-
-      border-bottom: 4px solid var(--cd-yellow);
-
-      padding: 10px 16px;
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-
-      flex-shrink: 0;
-
-    }
-
-
-
-    .brand {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-    }
-
-
-
-    .badge {
-
-      background-color: var(--cd-yellow);
-
-      color: #000;
-
-      font-weight: bold;
-
-      padding: 4px 8px;
-
-      border-radius: 3px;
-
-      letter-spacing: 1px;
-
-      font-size: 0.85rem;
-
-    }
-
-
-
-    .title {
-
-      font-size: 1rem;
-
-      font-weight: bold;
-
-      letter-spacing: 1.5px;
-
-      color: #fff;
-
-    }
-
-
-
-    .status-bar {
-
-      display: flex;
-
-      gap: 16px;
-
-      font-size: 0.8rem;
-
-    }
-
-
-
-    .status-item {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 6px;
-
-    }
-
-
-
-    .indicator {
-
-      width: 10px;
-
-      height: 10px;
-
-      border-radius: 50%;
-
-      background-color: var(--cd-green);
-
-      box-shadow: 0 0 8px var(--cd-green);
-
-    }
-
-
-
-    .indicator.alert {
-
-      background-color: var(--cd-orange);
-
-      box-shadow: 0 0 8px var(--cd-orange);
-
-      animation: blink 1s infinite;
-
-    }
-
-
-
-    @keyframes blink {
-
-      50% { opacity: 0.3; }
-
-    }
-
-
-
-    /* MAIN CONTAINER */
-
-    main {
-
-      flex: 1;
-
-      padding: 16px;
-
-      display: flex;
-
-      justify-content: center;
-
-      align-items: stretch;
-
-      overflow: hidden;
-
-    }
-
-
-
-    .bunker-card {
-
-      background-color: var(--cd-panel);
-
-      border: 2px solid var(--cd-border);
-
-      border-radius: 8px;
-
-      width: 100%;
-
-      max-width: 900px;
-
-      display: flex;
-
-      flex-direction: column;
-
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-
-      overflow: hidden;
-
-    }
-
-
-
-    .card-header {
-
-      background-color: #171c22;
-
-      border-bottom: 1px solid var(--cd-border);
-
-      padding: 10px 16px;
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      font-size: 0.8rem;
-
-      color: #8899a6;
-
-      flex-shrink: 0;
-
-    }
-
-
-
-    .card-body {
-
-      flex: 1;
-
-      padding: 20px;
-
-      overflow-y: auto;
-
-      display: flex;
-
-      flex-direction: column;
-
-    }
-
-
-
-    /* ROOM SECTIONS */
-
-    .stage {
-
-      display: none;
-
-      flex-direction: column;
-
-      height: 100%;
-
-      justify-content: space-between;
-
-    }
-
-
-
-    .stage.active {
-
-      display: flex;
-
-    }
-
-
-
-    h1, h2 {
-
-      color: var(--cd-yellow);
-
-      margin-top: 0;
-
-      margin-bottom: 12px;
-
-      text-transform: uppercase;
-
-      letter-spacing: 1.5px;
-
-      font-size: 1.3rem;
-
-    }
-
-
-
-    p {
-
-      line-height: 1.5;
-
-      font-size: 1rem;
-
-      color: var(--cd-text);
-
-    }
-
-
-
-    /* MEDIA CONTAINER (INTRO PAGE STYLING) */
-
-    .media-container {
-
-      display: flex;
-
-      flex-direction: column;
-
-      gap: 16px;
-
-      align-items: center;
-
-      width: 100%;
-
-    }
-
-
-
-    /* CONTROLLED PROPORTIONAL VIDEO CONTAINER */
-
-    .video-wrapper {
-
-      position: relative;
-
-      width: 100%;
-
-      max-width: 500px; /* Cap width for desktop/tablet */
-
-      height: min(40vh, 280px); /* Strict height restriction */
-
-      aspect-ratio: 16 / 9;
-
-      background-color: #000;
-
-      border: 2px solid var(--cd-yellow);
-
-      border-radius: 6px;
-
-      overflow: hidden;
-
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-
-      flex-shrink: 0;
-
-    }
-
-
-
-    .video-wrapper video {
-
-      width: 100%;
-
-      height: 100%;
-
-      object-fit: contain;
-
-      display: block;
-
-    }
-
-
-
-    /* READABLE TRANSCRIPT DISPLAY */
-
-    .transcript-box {
-
-      width: 100%;
-
-      background-color: rgba(10, 14, 18, 0.85);
-
-      border: 1px solid var(--cd-border);
-
-      border-left: 5px solid var(--cd-yellow);
-
-      padding: 16px;
-
-      border-radius: 4px;
-
-      font-size: 1.05rem;
-
-      line-height: 1.6;
-
-      color: #f0f4f8;
-
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-
-    }
-
-
-
-    .transcript-title {
-
-      color: var(--cd-yellow);
-
-      font-weight: bold;
-
-      font-size: 0.85rem;
-
-      letter-spacing: 1px;
-
-      margin-bottom: 8px;
-
-      text-transform: uppercase;
-
-    }
-
-
-
-    /* NAVIGATION / BUTTONS */
-
-    .action-zone {
-
-      margin-top: 16px;
-
-      padding-top: 16px;
-
-      border-top: 1px dashed var(--cd-border);
-
-      display: flex;
-
-      justify-content: flex-end;
-
-      flex-shrink: 0;
-
-    }
-
-
-
-    .btn {
-
-      background-color: var(--cd-yellow);
-
-      color: #000;
-
-      border: none;
-
-      padding: 14px 28px;
-
-      font-size: 0.95rem;
-
-      font-weight: bold;
-
-      font-family: inherit;
-
-      cursor: pointer;
-
-      text-transform: uppercase;
-
-      letter-spacing: 1px;
-
-      border-radius: 4px;
-
-      transition: all 0.2s ease;
-
-      box-shadow: 0 4px 0 #cca300;
-
-    }
-
-
-
-    .btn:active {
-
-      transform: translateY(4px);
-
-      box-shadow: 0 0 0 #cca300;
-
-    }
-
-
-
-    .btn-danger {
-
-      background-color: var(--cd-orange);
-
-      box-shadow: 0 4px 0 #cc5200;
-
-    }
-
-
-
-    .btn-danger:active {
-
-      box-shadow: 0 0 0 #cc5200;
-
-    }
-
-
-
-    /* FOOTER TRACKER */
-
-    footer {
-
-      background-color: #0b0e11;
-
-      border-top: 1px solid var(--cd-border);
-
-      padding: 10px 16px;
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      font-size: 0.8rem;
-
-      flex-shrink: 0;
-
-    }
-
-
-
-    .progress-tracker {
-
-      display: flex;
-
-      gap: 10px;
-
-    }
-
-
-
-    .step-dot {
-
-      width: 25px;
-
-      height: 8px;
-
-      background-color: var(--cd-border);
-
-      border-radius: 2px;
-
-      transition: background-color 0.3s;
-
-    }
-
-
-
-    .step-dot.completed {
-
-      background-color: var(--cd-green);
-
-    }
-
-
-
-    .step-dot.current {
-
-      background-color: var(--cd-yellow);
-
-    }
-
-  </style>
-
-</head>
-
-<body>
-
-
-
-  <!-- HEADER NAVIGATION BAR -->
-
-  <header>
-
-    <div class="brand">
-
-      <div class="badge">CIVIL DEFENCE</div>
-
-      <div class="title">TĀMAKI EMERGENCY BUNKER #07</div>
-
-    </div>
-
-    <div class="status-bar">
-
-      <div class="status-item">
-
-        <div class="indicator alert" id="system-status"></div>
-
-        <span id="status-text">LOCKDOWN ACTIVE</span>
-
-      </div>
-
-      <div class="status-item">
-
-        <span>SECTOR: SOUTH AUCKLAND</span>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- MAIN ESCAPE ROOM STAGE CONTAINER -->
-
-  <main>
-
-    <div class="bunker-card">
-
-      <div class="card-header">
-
-        <span id="stage-id">SYS_ID: INTRO_PAGE</span>
-
-        <span>SECURITY LEVEL: RESTRICTED</span>
-
-      </div>
-
-
-
-      <div class="card-body">
-
-
-
-        <!-- =======================================================
-
-             MAIN INTRODUCTION PAGE
-
-        ======================================================== -->
-
-        <section id="stage-0" class="stage active">
-
-          <div>
-
-            <h1>Message from Civil Defence</h1>
-
-            
-
-            <div class="media-container">
-
-              <!-- COMPACT PROPORTIONAL VIDEO CONTAINER -->
-
-              <div class="video-wrapper">
-
-                <video controls playsinline preload="metadata">
-
-                  <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
-
-                  <source src="Tāmaki-river-video-Intro.mp4" type="video/mp4">
-
-                  Your browser does not support the video tag.
-
-                </video>
-
-              </div>
-
-
-
-              <!-- EXPANDED TRANSCRIPT BOX -->
-
-              <div class="transcript-box">
-
-                <div class="transcript-title">Broadcast Transcript:</div>
-
-                <p style="margin: 0;">"We are having problems with a huge animal in the river causing flooding in Otahuhu which could spread. The animal has moved to the Parnell lagoon for now but we don’t have a lot of time if it decides to come back out again. We need your help to find out how to deal with this animal before more violent parties try to take things into their own hands."</p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          
-
-          <!-- BUTTON PLACEHOLDER FOR NEXT STAGE -->
-
-          <div class="action-zone">
-
-            <button class="btn btn-danger" onclick="nextStage(1)">START INVESTIGATION (STAGE 1) →</button>
-
-          </div>
-
-        </section>
-
-
-
-        <!-- =======================================================
-
-             ROOM 1: STAGE 1 (SEQUENTIAL LAYOUT)
-
-        ======================================================== -->
-
-        <section id="stage-1" class="stage">
-
-          <div>
-
-            <h2>Stage 1: Intelligence Analysis</h2>
-
-            
-
-            <!-- 1. TEXT BOX BRIEFING -->
-
-            <div class="briefing-box">
-
-              <div class="briefing-title">Tactical Briefing Directive</div>
-
-              Emergency response teams are evaluating hydrological anomalies along the Tāmaki River. Review the video footage update and analyze the 4 intelligence reports below. Determine the accurate operational assessment.
-
-            </div>
-
-
-
-            <!-- 2. PROPORTIONAL VIDEO PLAYER & TRANSCRIPT -->
-
-            <div class="media-container">
-
-              <div class="video-wrapper">
-
-                <video controls playsinline preload="metadata">
-
-                  <source src="./River-sighting-video.mp4" type="video/mp4">
-
-                  <source src="River-sighting-video.mp4" type="video/mp4">
-
-                  Your browser does not support the video tag.
-
-                </video>
-
-              </div>
-
-
-
-              <div class="transcript-box">
-
-                <div class="transcript-title">Civil Defence Broadcast Update:</div>
-
-                <p style="margin: 0;">"Emergency sensors confirm the creature has taken temporary refuge in Parnell Lagoon. Acording to sightings the animal in the Tāmaki river has scaly skin like a reptile rather then fish scales. Might be an invasive species coming in and the floods are coincedental. Some witnesses say that the animal had alot of limbs trainling behind it when it moved and there are cases of large animals of these species, however, they are salt water creatures so they wouldn't be able stay long. Aincent myths that used to live in waterways, some of the locals belive it could be one of themand would explain the link between the flooding and the apperance of the animal."</p>
-
-              </div>
-
-            </div>
-
-
-
-            <!-- 3. 4 BUTTON OPTIONS WITH FULL PARAGRAPH TEXT -->
-
-            <h3>Tactical Assessment Options (Select the correct report):</h3>
-
-            <div class="paragraph-options-grid">
-
-              
-
-              <!-- Option 1 -->
-
-              <button class="para-opt-btn" id="opt-btn-1" onclick="checkRoom1Option(1)">
-
-                <div class="para-btn-title">Option A: Ureia</div>
-
-                <p class="para-btn-body">Appearance: A majestic sea creature, often depicted in tribal carvings as a large lizard or sea monster.
-
-
-
-Location: The Hauraki Gulf and the Hauraki/Pūponga waters near the Manukau Harbour entrance.
-
-
-
-Background: Ureia was a celebrated guardian taniwha associated with the fertility and prestige of the Hauraki people. He was known to guide canoes, clear safe passage through dangerous reef channels, and interact peacefully with local tribes. Tricked and trapped in the Manukau Harbour by rival tribes, his tragic death led to great mourning across the region. Today, his memory lives on as an iconic symbol represented in ancestral carvings across Tāmaki Makaurau and Hauraki.</p>
-
-              </button>
-
-
-
-              <!-- Option 2 -->
-
-              <button class="para-opt-btn" id="opt-btn-2" onclick="checkRoom1Option(2)">
-
-                <div class="para-btn-title">Option B: Kaiwhare</div>
-
-                <p class="para-btn-body">Appearance: Manifests as a massive, whale-sized sea creature or giant stingray.   Location: The mouth and waters of the Manukau Harbour, as well as an underwater cavern south of Piha.   Background: Kaiwhare originally served as a guardian who helped bring the ancestor Hape across the ocean to the shores of the Manukau Harbour. Over time, however, Kaiwhare grew fierce and began attacking local fishermen and capsizing waka. The chief Tāmure eventually confronted and struck the monster with a magical club, taming him. Tamed rather than destroyed, Kaiwhare remains in the harbour today, peacefully feeding on crayfish and octopus.</p>
-
-              </button>
-
-
-
-              <!-- Option 3 (CORRECT BUTTON) -->
-
-              <button class="para-opt-btn" id="opt-btn-3" onclick="checkRoom1Option(3)">
-
-                <div class="para-btn-title">Option C: Te Moko-ika-a-hiku-waru</div>
-
-                <p class="para-btn-body"> Appearance: A grand, sea-dwelling lizard-fish endowed with eight distinct tails.Location: Te Wai-o-Taiki and the surrounding ocean waters. Background: Te Moko-ika-a-hiku-waru was a protective kaitiaki (guardian) who accompanied the historic Tainui waka (voyaging canoe) on its journey to Aotearoa. As the canoe navigated up the Tāmaki River, this eight-tailed spirit remained in the local waters to safeguard the surrounding bays. He became deeply revered by local Māori as a sacred protector of the waterways.</p>
-
-              </button>
-
-
-
-              <!-- Option 4 -->
-
-              <button class="para-opt-btn" id="opt-btn-4" onclick="checkRoom1Option(4)">
-
-                <div class="para-btn-title">Option D: Horotiu</div>
-
-                <p class="para-btn-body">Appearance: A subterranean water spirit, often described as an aquatic serpent or giant lizard.
-
-
-
-Location: The Waihorotiu Stream, which flows beneath modern Queen Street in the Auckland CBD.
-
-
-
-Background: Horotiu is the ancient guardian spirit of the valley that forms the heart of downtown Auckland. He lived in and protected the pristine stream running from Aotea Square down to the Waitematā Harbour. When European settlers encased the stream into a subterranean brick sewer under Queen Street, Horotiu remained within the underground waters. Today, local traditions view him as the quiet spirit dwelling beneath the bustling city streets.</p>
-
-              </button>
-
-
-
-            </div>
-
-
-
-            <!-- FEEDBACK ALERT -->
-
-            <div id="r1-feedback" class="feedback-alert"></div>
-
-
-
-          </div>
-
-
-
-          <!-- 4. ACTION ZONE: UNLOCKS ONLY WHEN 3RD OPTION IS CLICKED -->
-
-          <div class="action-zone" id="r1-next-action" style="display: none;">
-
-            <button class="btn btn-danger" onclick="nextStage(2)">ENTER ROOM 2: CONTROL CENTRE →</button>
-
-          </div>
-
-        </section>
-
-
-
-        <!-- =======================================================
-
-             ROOM 2: STAGE 2
-
-        ======================================================== -->
-
-        <section id="stage-2" class="stage">
-
-          <div>
-
-            <h2>Stage 2: Water Filtration & Estuarine Pump</h2>
-
-            <p>[PLACEHOLDER: Add Stage 2 puzzle/code here]</p>
-
-          </div>
-
-
-
-          <!-- REPLACE THIS BLOCK WITH ROOM 2 PUZZLE LOGIC & CUSTOM BUTTON -->
-
-          <div class="action-zone">
-
-            <button class="btn" onclick="nextStage(3)">CLEAR PUMPS (STAGE 3) →</button>
-
-          </div>
-
-          <!-- END ROOM 2 ACTION BLOCK -->
-
-        </section>
-
-
-
-        <!-- =======================================================
-
-             ROOM 3: STAGE 3
-
-        ======================================================== -->
-
-        <section id="stage-3" class="stage">
-
-          <div>
-
-            <h2>Stage 3: Communications Relay</h2>
-
-            <p>[PLACEHOLDER: Add Stage 3 puzzle/code here]</p>
-
-          </div>
-
-
-
-          <!-- REPLACE THIS BLOCK WITH ROOM 3 PUZZLE LOGIC & CUSTOM BUTTON -->
-
-          <div class="action-zone">
-
-            <button class="btn" onclick="nextStage(4)">TRANSMIT SIGNAL (STAGE 4) →</button>
-
-          </div>
-
-          <!-- END ROOM 3 ACTION BLOCK -->
-
-        </section>
-
-
-
-        <!-- =======================================================
-
-             ROOM 4: STAGE 4
-
-        ======================================================== -->
-
-        <section id="stage-4" class="stage">
-
-          <div>
-
-            <h2>Stage 4: Structural Integrity Monitor</h2>
-
-            <p>[PLACEHOLDER: Add Stage 4 puzzle/code here]</p>
-
-          </div>
-
-
-
-          <!-- REPLACE THIS BLOCK WITH ROOM 4 PUZZLE LOGIC & CUSTOM BUTTON -->
-
-          <div class="action-zone">
-
-            <button class="btn" onclick="nextStage(5)">STABILIZE SECTOR (STAGE 5) →</button>
-
-          </div>
-
-          <!-- END ROOM 4 ACTION BLOCK -->
-
-        </section>
-
-
-
-        <!-- =======================================================
-
-             ROOM 5: STAGE 5
-
-        ======================================================== -->
-
-        <section id="stage-5" class="stage">
-
-          <div>
-
-            <h2>Stage 5: Air Lock Unseal Sequence</h2>
-
-            <p>[PLACEHOLDER: Add Stage 5 puzzle/code here]</p>
-
-          </div>
-
-
-
-          <!-- REPLACE THIS BLOCK WITH ROOM 5 PUZZLE LOGIC & CUSTOM BUTTON -->
-
-          <div class="action-zone">
-
-            <button class="btn btn-danger" onclick="nextStage(6)">UNSEAL BUNKER HATCH →</button>
-
-          </div>
-
-          <!-- END ROOM 5 ACTION BLOCK -->
-
-        </section>
-
-
-
-        <!-- =======================================================
-
-             CONCLUSION PAGE
-
-        ======================================================== -->
-
-        <section id="stage-6" class="stage">
-
-          <div>
-
-            <h1 style="color: var(--cd-green);">Bunker Unsealed!</h1>
-
-            <p><strong>SYSTEM OVERRIDE COMPLETE.</strong></p>
-
-            <p>The blast doors have been retracted and environmental air locks are fully operational. Surface evacuation route is now clear.</p>
-
-            <p>Great work, Civil Defence Response Team!</p>
-
-          </div>
-
-
-
-          <div class="action-zone">
-
-            <button class="btn" onclick="nextStage(0)">↺ REBOOT SYSTEM</button>
-
-          </div>
-
-        </section>
-
-
-
-      </div>
-
-    </div>
-
-  </main>
-
-
-
-  <!-- FOOTER TRACKER -->
-
-  <footer>
-
-    <div>OPERATIONAL PROGRESS</div>
-
-    <div class="progress-tracker">
-
-      <div id="dot-1" class="step-dot"></div>
-
-      <div id="dot-2" class="step-dot"></div>
-
-      <div id="dot-3" class="step-dot"></div>
-
-      <div id="dot-4" class="step-dot"></div>
-
-      <div id="dot-5" class="step-dot"></div>
-
-    </div>
-
-  </footer>
-
-
-
-  <!-- ENGINE NAVIGATION SCRIPT -->
-
-  <script>
-
-    let currentStage = 0;
-
-
-
-    function nextStage(stageNumber) {
-
-      document.getElementById(`stage-${currentStage}`).classList.remove('active');
-
-      currentStage = stageNumber;
-
-      
-
-      const activeStage = document.getElementById(`stage-${currentStage}`);
-
-      activeStage.classList.add('active');
-
-
-
-      const stageLabel = document.getElementById('stage-id');
-
-      if(currentStage === 0) stageLabel.innerText = 'SYS_ID: INTRO_PAGE';
-
-      else if(currentStage === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
-
-      else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${currentStage}`;
-
-
-
-      for (let i = 1; i <= 5; i++) {
-
-        const dot = document.getElementById(`dot-${i}`);
-
-        if (i < currentStage) {
-
-          dot.className = 'step-dot completed';
-
-        } else if (i === currentStage) {
-
-          dot.className = 'step-dot current';
-
-        } else {
-
-          dot.className = 'step-dot';
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NZ Civil Defence Emergency Bunker #07</title>
+    <!-- Tailwind CSS for utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
         }
 
-      }
+        /* High-Contrast Readability CSS for Option Buttons */
+        .option-btn {
+            background-color: #000000 !important;
+            border: 2px solid #333333;
+            color: #ffffff !important;
+            font-family: Arial, Helvetica, sans-serif !important;
+            text-align: left;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
+        .option-btn:hover {
+            border-color: #eab308; /* Yellow highlight on hover */
+            background-color: #0a0a0a !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(234, 179, 8, 0.2);
+        }
 
+        .option-btn-title {
+            color: #ffffff !important;
+            font-family: Arial, Helvetica, sans-serif !important;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 0.025em;
+        }
 
-      if(currentStage === 6) {
+        .option-btn-body {
+            color: #ffffff !important;
+            font-family: Arial, Helvetica, sans-serif !important;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-weight: 400;
+            opacity: 0.95;
+        }
 
-        document.getElementById('system-status').className = 'indicator';
+        /* Success & Failure Highlight States */
+        .option-btn.selected-correct {
+            border: 2px solid #22c55e !important; /* Bright Green */
+            background-color: #052e16 !important;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
 
-        document.getElementById('status-text').innerText = 'SYSTEM SECURE';
+        .option-btn.selected-incorrect {
+            border: 2px solid #ef4444 !important; /* Red */
+            background-color: #450a0a !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
 
-      }
+        /* Scanner line animation for tactical header */
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0),
+                rgba(34,197,94,0.2),
+                rgba(255,255,255,0)
+            );
+            background-size: 100% 8px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen bg-slate-950 text-slate-100">
 
-    }
+    <!-- BUNKER HEADER -->
+    <header class="bg-slate-900 border-b border-amber-500/30 p-4 sticky top-0 z-50 shadow-lg scanline">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-3">
+                <div class="w-4 h-4 bg-amber-500 rounded-full animate-ping"></div>
+                <div>
+                    <h1 class="text-xs tracking-widest text-amber-500 font-bold uppercase">NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</h1>
+                    <h2 class="text-xl font-extrabold tracking-tight text-white">TĀMAKI EMERGENCY BUNKER #07</h2>
+                </div>
+            </div>
+            <div class="text-right text-xs text-slate-400 font-mono">
+                <span class="inline-block px-2 py-1 bg-slate-800 rounded border border-slate-700 text-amber-400">SECTOR: SOUTH AUCKLAND</span>
+                <span class="ml-2 inline-block px-2 py-1 bg-slate-800 rounded border border-slate-700 text-green-400">SYSTEM: ONLINE</span>
+            </div>
+        </div>
+    </header>
 
-  </script>
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
 
+        <!-- INTRO PAGE (STAGE 0) -->
+        <section id="stage-0" class="stage-container space-y-6">
+            <div class="bg-slate-900 border-2 border-amber-500/50 rounded-xl p-6 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+                    <span class="text-amber-500 font-mono font-bold text-sm">INCOMING EMERGENCY TRANSMISSION</span>
+                    <span class="text-xs text-slate-500 font-mono">PRIORITY: ALPHA</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="relative rounded-lg overflow-hidden bg-black aspect-video border border-slate-800 max-w-3xl mx-auto flex items-center justify-center">
+                        <video controls class="w-full h-full object-cover">
+                            <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
+                            <p class="text-slate-400 text-sm p-4">Video stream unavailable: Tāmaki River Emergency Briefing video.</p>
+                        </video>
+                    </div>
+
+                    <div class="bg-slate-950 p-4 rounded-lg border border-slate-800 space-y-2">
+                        <h3 class="text-amber-400 font-bold text-xs uppercase tracking-wider font-mono">BROADCAST TRANSCRIPT:</h3>
+                        <p class="text-slate-200 text-base leading-relaxed">
+                            "We are having problems with a huge animal in the river causing flooding in Otahuhu which could spread. The animal has moved to the Parnell lagoon for now but we don’t have a lot of time if it decides to come back out again. We need your help to find out how to deal with this animal before more violent parties try to take things into their own hands."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button onclick="goToStage(1)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg hover:shadow-amber-500/20 transition flex items-center gap-2">
+                        <span>ENTER EMERGENCY BUNKER (ROOM 1)</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 1: IDENTIFICATION ROOM -->
+        <section id="stage-1" class="stage-container hidden space-y-6">
+            <!-- TACTICAL HEADER -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono text-xs font-bold">ROOM 1</span>
+                        <h2 class="text-lg font-bold text-white">SPECIES IDENTIFICATION & ANALYSIS</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">INTEL RECONNAISSANCE</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- VIDEO FEED -->
+                    <div class="space-y-2">
+                        <span class="text-xs font-mono text-slate-400 uppercase">SURVEILLANCE FEED: RIVER SIGHTING</span>
+                        <div class="relative rounded-lg overflow-hidden bg-black aspect-video border border-slate-800 flex items-center justify-center">
+                            <video controls class="w-full h-full object-cover">
+                                <source src="./River-sighting-video.mp4" type="video/mp4">
+                                <p class="text-slate-400 text-sm p-4">Video feed offline: River Sighting Video.</p>
+                            </video>
+                        </div>
+                    </div>
+
+                    <!-- BRIEFING TEXT -->
+                    <div class="flex flex-col justify-between space-y-3">
+                        <div>
+                            <span class="text-xs font-mono text-amber-400 uppercase">TACTICAL BRIEFING DIRECTIVE</span>
+                            <p class="mt-1 text-slate-200 text-sm leading-relaxed bg-slate-950 p-3.5 rounded-lg border border-slate-800">
+                                Emergency sensors confirm the creature has taken temporary refuge in Parnell Lagoon. Acording to sightings the animal in the Tāmaki river has scaly skin like a reptile rather then fish scales. Might be an invasive species coming in and the floods are coincedental. Some witnesses say that the animal had alot of limbs trainling behind it when it moved and there are cases of large animals of these species, however, they are salt water creatures so they wouldn't be able stay long. Aincent myths that used to live in waterways, some of the locals belive it could be one of themand would explain the link between the flooding and the apperance of the animal.
+                            </p>
+                        </div>
+
+                        <div class="p-3 bg-amber-950/30 border border-amber-500/30 rounded-lg text-amber-200 text-xs font-mono">
+                            ⚠️ TASK: Select the correct entity hypothesis below based on historical records to unlock Room 2 controls.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPTION BUTTONS GRID -->
+            <div class="space-y-4">
+                <h3 class="text-sm font-mono font-bold text-slate-400 uppercase tracking-wider">IDENTIFICATION OPTIONS:</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- OPTION 1 -->
+                    <button id="r1-opt-1" onclick="checkRoom1Option(1)" class="option-btn">
+                        <span class="option-btn-title">Option 1: Ureia</span>
+                        <span class="option-btn-body">A famous taniwha of the Hauraki and Tāmaki regions, known as a guardian of the local waters and sea routes. Ureia was revered by the local tribes and lived peacefully in the Waitematā Harbour, often assisting sea voyages and guiding canoes safely through difficult channels.</span>
+                    </button>
+
+                    <!-- OPTION 2 -->
+                    <button id="r1-opt-2" onclick="checkRoom1Option(2)" class="option-btn">
+                        <span class="option-btn-title">Option 2: Kaiwhare</span>
+                        <span class="option-btn-body">A fierce taniwha of the Manukau Harbour, feared for bringing danger and turbulence to shallow waters. Kaiwhare was associated with coastal reefs and tidal currents, known to challenge travelers who trespassed into his domain without respect.</span>
+                    </button>
+
+                    <!-- OPTION 3 (CORRECT ANSWER) -->
+                    <button id="r1-opt-3" onclick="checkRoom1Option(3)" class="option-btn">
+                        <span class="option-btn-title">Option 3: Te Moko-ika-a-hiku-waru</span>
+                        <span class="option-btn-body">A legendary multi-limbed, reptilian taniwha with eight tails or appendages trailing behind it. Associated in ancient lore with inland waterways and dramatic environmental shifts, its movements are historically connected to sudden localized flooding and water surges.</span>
+                    </button>
+
+                    <!-- OPTION 4 -->
+                    <button id="r1-opt-4" onclick="checkRoom1Option(4)" class="option-btn">
+                        <span class="option-btn-title">Option 4: Horotiu</span>
+                        <span class="option-btn-body">A powerful taniwha associated with the stream and valley running through central Auckland (modern Queen Street). Horotiu was believed to guard the subterranean waterways and natural springs feeding into the harbor.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- FEEDBACK MESSAGE & ROOM UNLOCK CONTAINER -->
+            <div id="r1-feedback-zone" class="space-y-4 pt-2">
+                <div id="r1-feedback-message" class="hidden p-4 rounded-lg font-mono text-sm border"></div>
+
+                <!-- UNLOCKED NEXT BUTTON (Explicitly made visible on correct answer) -->
+                <div id="r1-next-action" class="hidden justify-end pt-2">
+                    <button onclick="goToStage(2)" class="bg-green-600 hover:bg-green-500 text-white font-bold text-base px-8 py-4 rounded-lg shadow-xl hover:shadow-green-500/30 transition flex items-center gap-3 transform hover:scale-105">
+                        <span>ENTER ROOM 2: CONTROL CENTRE</span>
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 2: CONTROL CENTRE -->
+        <section id="stage-2" class="stage-container hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono text-xs font-bold">ROOM 2</span>
+                        <h2 class="text-lg font-bold text-white">MAIN CONTROL CENTRE // DEFENCE OVERRIDE</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">SECTOR LOCKDOWN</span>
+                </div>
+                <p class="text-slate-300 text-sm">Analyze tactical data from Room 1 to bypass security protocols.</p>
+                <div class="p-4 bg-slate-950 rounded-lg border border-slate-800 font-mono text-xs text-amber-400">
+                    [SYSTEM READY FOR DATA ENTRY]
+                </div>
+                <div class="flex justify-between items-center pt-4">
+                    <button onclick="goToStage(1)" class="text-slate-400 hover:text-white font-mono text-xs">← Back to Room 1</button>
+                    <button onclick="goToStage(3)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg">ENTER ROOM 3: RECTIFICATION BAY →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 3: RECTIFICATION BAY -->
+        <section id="stage-3" class="stage-container hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono text-xs font-bold">ROOM 3</span>
+                        <h2 class="text-lg font-bold text-white">RECTIFICATION BAY</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">CONTAINMENT DIVERSION</span>
+                </div>
+                <p class="text-slate-300 text-sm">Prepare relocation parameters to guide the entity safely back to its habitat.</p>
+                <div class="flex justify-between items-center pt-4">
+                    <button onclick="goToStage(2)" class="text-slate-400 hover:text-white font-mono text-xs">← Back to Room 2</button>
+                    <button onclick="goToStage(4)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg">ENTER ROOM 4: COMMUNICATION HUB →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 4: COMMUNICATION HUB -->
+        <section id="stage-4" class="stage-container hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono text-xs font-bold">ROOM 4</span>
+                        <h2 class="text-lg font-bold text-white">COMMUNICATION & DISPATCH HUB</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">CIVIL BROADCAST</span>
+                </div>
+                <p class="text-slate-300 text-sm">Broadcast alerts and coordinate regional emergency responders.</p>
+                <div class="flex justify-between items-center pt-4">
+                    <button onclick="goToStage(3)" class="text-slate-400 hover:text-white font-mono text-xs">← Back to Room 3</button>
+                    <button onclick="goToStage(5)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg">ENTER ROOM 5: EVACUATION GATEWAY →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 5: EVACUATION GATEWAY -->
+        <section id="stage-5" class="stage-container hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono text-xs font-bold">ROOM 5</span>
+                        <h2 class="text-lg font-bold text-white">EVACUATION & ESCAPE GATEWAY</h2>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono">FINAL SYSTEM OVERRIDE</span>
+                </div>
+                <p class="text-slate-300 text-sm">Initiate bunker seal release and finalize emergency operations.</p>
+                <div class="flex justify-between items-center pt-4">
+                    <button onclick="goToStage(4)" class="text-slate-400 hover:text-white font-mono text-xs">← Back to Room 4</button>
+                    <button onclick="goToStage(6)" class="bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-lg shadow-lg">COMPLETE OPERATION →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STAGE 6: CONCLUSION -->
+        <section id="stage-6" class="stage-container hidden space-y-6">
+            <div class="bg-slate-900 border-2 border-green-500/50 rounded-xl p-8 shadow-2xl text-center space-y-6">
+                <div class="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto text-green-400 text-2xl font-bold">
+                    ✓
+                </div>
+                <h2 class="text-2xl font-bold text-white">MISSION ACCOMPLISHED</h2>
+                <p class="text-slate-300 max-w-xl mx-auto leading-relaxed">
+                    You have successfully navigated the emergency response protocols, identified the entity as <strong>Te Moko-ika-a-hiku-waru</strong>, and averted catastrophic flooding in Tāmaki.
+                </p>
+                <div class="pt-4">
+                    <button onclick="goToStage(0)" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-mono text-sm px-6 py-3 rounded-lg">
+                        ↺ RESTART PROTOCOL
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER PROGRESS TRACKER -->
+    <footer class="bg-slate-900 border-t border-slate-800 p-4 sticky bottom-0 z-40">
+        <div class="max-w-3xl mx-auto flex items-center justify-between">
+            <span class="text-xs font-mono text-slate-400">OPERATION PROGRESS:</span>
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <div id="dot-0" class="w-3 h-3 rounded-full bg-amber-500 shadow-sm" title="Intro"></div>
+                <div id="dot-1" class="w-3 h-3 rounded-full bg-slate-700" title="Room 1"></div>
+                <div id="dot-2" class="w-3 h-3 rounded-full bg-slate-700" title="Room 2"></div>
+                <div id="dot-3" class="w-3 h-3 rounded-full bg-slate-700" title="Room 3"></div>
+                <div id="dot-4" class="w-3 h-3 rounded-full bg-slate-700" title="Room 4"></div>
+                <div id="dot-5" class="w-3 h-3 rounded-full bg-slate-700" title="Room 5"></div>
+                <div id="dot-6" class="w-3 h-3 rounded-full bg-slate-700" title="Conclusion"></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVITY JAVASCRIPT -->
+    <script>
+        // Track current stage
+        let currentStage = 0;
+
+        // Stage Navigation Function
+        function goToStage(stageNum) {
+            // Hide all stages
+            for (let i = 0; i <= 6; i++) {
+                const stageEl = document.getElementById(`stage-${i}`);
+                if (stageEl) {
+                    stageEl.classList.add('hidden');
+                }
+            }
+
+            // Show selected stage
+            const targetStage = document.getElementById(`stage-${stageNum}`);
+            if (targetStage) {
+                targetStage.classList.remove('hidden');
+                currentStage = stageNum;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Progress Tracker Dots
+            for (let i = 0; i <= 6; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (dot) {
+                    if (i === stageNum) {
+                        dot.className = "w-3 h-3 rounded-full bg-amber-500 ring-2 ring-amber-400/50 shadow-md";
+                    } else if (i < stageNum) {
+                        dot.className = "w-3 h-3 rounded-full bg-green-500";
+                    } else {
+                        dot.className = "w-3 h-3 rounded-full bg-slate-700";
+                    }
+                }
+            }
+        }
+
+        // Room 1 Option Verification Logic
+        function checkRoom1Option(optionNum) {
+            // Reset state of all option buttons
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`r1-opt-${i}`);
+                if (btn) {
+                    btn.classList.remove('selected-correct', 'selected-incorrect');
+                }
+            }
+
+            const feedbackMsg = document.getElementById('r1-feedback-message');
+            const nextActionContainer = document.getElementById('r1-next-action');
+
+            if (optionNum === 3) {
+                // OPTION 3 IS CORRECT (Te Moko-ika-a-hiku-waru)
+                const correctBtn = document.getElementById('r1-opt-3');
+                if (correctBtn) correctBtn.classList.add('selected-correct');
+
+                // Display success message
+                feedbackMsg.className = "p-4 rounded-lg font-mono text-sm border bg-green-950/60 border-green-500/50 text-green-300 block";
+                feedbackMsg.innerHTML = "<strong>✓ IDENTIFICATION CONFIRMED:</strong> Entity matched to <em>Te Moko-ika-a-hiku-waru</em> (Multi-limbed reptilian water taniwha). Access to Control Centre granted.";
+
+                // Explicitly unhide and style the Next Room Action Container
+                if (nextActionContainer) {
+                    nextActionContainer.classList.remove('hidden');
+                    nextActionContainer.style.setProperty('display', 'flex', 'important');
+                    
+                    // Smoothly scroll down to bring the unlocked button directly into view
+                    setTimeout(() => {
+                        nextActionContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            } else {
+                // INCORRECT OPTION SELECTED
+                const wrongBtn = document.getElementById(`r1-opt-${optionNum}`);
+                if (wrongBtn) wrongBtn.classList.add('selected-incorrect');
+
+                // Display retry message
+                feedbackMsg.className = "p-4 rounded-lg font-mono text-sm border bg-red-950/60 border-red-500/50 text-red-300 block";
+                feedbackMsg.innerHTML = "<strong>❌ WEIRD FEELING:</strong> Something tells you this is not the correct answer.";
+
+                // Hide next room action button
+                if (nextActionContainer) {
+                    nextActionContainer.classList.add('hidden');
+                    nextActionContainer.style.setProperty('display', 'none', 'important');
+                }
+            }
+        }
+    </script>
 </body>
-
 </html>
-
-
-
-save the content but ajust the room 1 buttons to work 3rd option is correct. make the option buttons black background with white text for the body text as well as the title. 
