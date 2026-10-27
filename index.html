@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
       --cd-yellow: #ffcc00;
@@ -14,287 +15,66 @@
       --cd-border: #333d47;
       --cd-green: #00ff66;
       --cd-text: #ffffff;
-      --cd-font: Arial, Helvetica, sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      user-select: none;
-      -webkit-user-select: none;
     }
 
     body {
-      margin: 0;
-      padding: 0;
       background-color: var(--cd-dark);
       color: var(--cd-text);
-      font-family: var(--cd-font);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* HEADER BAR */
-    header {
-      background-color: var(--cd-blue);
-      border-bottom: 4px solid var(--cd-yellow);
-      padding: 10px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-      flex-shrink: 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .badge {
-      background-color: var(--cd-yellow);
-      color: #000;
-      font-weight: bold;
-      padding: 4px 8px;
-      border-radius: 3px;
-      letter-spacing: 1px;
-      font-size: 0.85rem;
-    }
-
-    .title {
-      font-size: 1rem;
-      font-weight: bold;
-      letter-spacing: 1.5px;
-      color: #fff;
-    }
-
-    .status-bar {
-      display: flex;
-      gap: 16px;
-      font-size: 0.8rem;
-    }
-
-    .status-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .indicator {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: var(--cd-green);
-      box-shadow: 0 0 8px var(--cd-green);
-    }
-
-    .indicator.alert {
-      background-color: var(--cd-orange);
-      box-shadow: 0 0 8px var(--cd-orange);
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      50% { opacity: 0.3; }
-    }
-
-    /* MAIN CONTAINER */
-    main {
-      flex: 1;
-      padding: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      overflow: hidden;
-    }
-
-    .bunker-card {
-      background-color: var(--cd-panel);
-      border: 2px solid var(--cd-border);
-      border-radius: 8px;
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      overflow: hidden;
-    }
-
-    .card-header {
-      background-color: #171c22;
-      border-bottom: 1px solid var(--cd-border);
-      padding: 10px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: #8899a6;
-      flex-shrink: 0;
-    }
-
-    .card-body {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
+      font-family: Arial, Helvetica, sans-serif !important;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* STRICT STAGE ISOLATION */
-    .stage {
-      display: none !important;
-      flex-direction: column;
-      height: 100%;
-      justify-content: space-between;
-    }
-
-    .stage.active {
-      display: flex !important;
-    }
-
-    h1, h2, h3 {
-      color: var(--cd-yellow);
-      margin-top: 0;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-size: 1.3rem;
-    }
-
-    p {
-      line-height: 1.5;
-      font-size: 1rem;
-      color: var(--cd-text);
-    }
-
-    /* BRIEFING BOX */
-    .briefing-box {
-      background-color: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--cd-border);
-      border-left: 5px solid var(--cd-yellow);
-      padding: 14px 16px;
-      border-radius: 4px;
-      margin-bottom: 16px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    .briefing-title {
-      color: var(--cd-yellow);
-      font-weight: bold;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-
-    /* MEDIA CONTAINER */
-    .media-container {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 16px;
-    }
-
-    .video-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 500px;
-      height: min(40vh, 280px);
-      aspect-ratio: 16 / 9;
-      background-color: #000;
-      border: 2px solid var(--cd-yellow);
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-      flex-shrink: 0;
-    }
-
-    .video-wrapper video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .transcript-box {
-      width: 100%;
-      background-color: rgba(10, 14, 18, 0.85);
-      border: 1px solid var(--cd-border);
-      border-left: 5px solid var(--cd-yellow);
-      padding: 16px;
-      border-radius: 4px;
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #ffffff;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-    }
-
-    .transcript-title {
-      color: var(--cd-yellow);
-      font-weight: bold;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    /* ROOM 1 PARAGRAPH BUTTON GRID */
-    .paragraph-options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 16px 0;
-    }
-
-    .para-opt-btn {
+    /* Strict button styling per requirements */
+    button, .option-btn, .action-btn {
       background-color: #000000 !important;
+      color: #ffffff !important;
+      font-family: Arial, Helvetica, sans-serif !important;
       border: 2px solid var(--cd-border);
       border-radius: 6px;
-      padding: 16px;
-      text-align: left;
+      padding: 12px 20px;
+      font-weight: bold;
       cursor: pointer;
-      font-family: var(--cd-font);
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      transition: all 0.2s ease-in-out;
     }
 
-    .para-opt-btn:hover {
+    button:hover, .option-btn:hover, .action-btn:hover {
       border-color: var(--cd-yellow);
       background-color: #111111 !important;
     }
 
-    .para-btn-title {
-      font-weight: bold;
-      color: #ffffff !important;
-      font-size: 1.05rem;
-      letter-spacing: 1px;
+    /* Option button specific layout */
+    .para-opt-btn {
+      width: 100%;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px !important;
     }
 
-    .para-btn-body {
-      color: #ffffff !important;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin: 0;
-      white-space: pre-line;
+    .para-opt-btn.correct {
+      border-color: var(--cd-green) !important;
+      background-color: #052e16 !important;
     }
 
-    /* ROOM 2 ZOOMABLE IMAGE CONTAINER WITH HARD EDGE BOUNDARIES */
-    .zoom-viewer-container {
+    .para-opt-btn.incorrect {
+      border-color: var(--cd-orange) !important;
+      background-color: #450a0a !important;
+    }
+
+    /* Zoomable Viewer Box */
+    .zoom-container {
       position: relative;
       width: 100%;
       height: 320px;
-      background-color: #000;
+      background-color: #000000;
       border: 2px solid var(--cd-yellow);
       border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 16px;
       touch-action: none;
     }
 
@@ -310,7 +90,7 @@
       cursor: grabbing;
     }
 
-    .zoom-image {
+    .zoom-img {
       position: absolute;
       top: 0;
       left: 0;
@@ -318,171 +98,541 @@
       height: 100%;
       object-fit: cover;
       transform-origin: 0 0;
-      transition: transform 0.05s ease-out;
+      user-select: none;
       pointer-events: none;
     }
 
-    .zoom-controls {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      display: flex;
-      gap: 6px;
-      z-index: 10;
-    }
-
-    .ctrl-btn {
-      background-color: #000000;
-      color: #ffffff;
-      border: 1px solid var(--cd-yellow);
-      font-family: var(--cd-font);
-      font-weight: bold;
-      font-size: 1rem;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .ctrl-btn:hover {
-      background-color: var(--cd-yellow);
-      color: #000;
-    }
-
-    /* ROOM 2 INPUT BOX */
-    .answer-box {
-      background-color: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--cd-border);
-      padding: 16px;
-      border-radius: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 10px;
-    }
-
-    .text-input {
-      flex: 1;
-      background-color: #000000;
-      border: 2px solid var(--cd-border);
-      color: #ffffff;
-      font-family: var(--cd-font);
-      font-size: 1.1rem;
-      padding: 12px 16px;
-      border-radius: 4px;
-      letter-spacing: 1px;
-    }
-
-    .text-input:focus {
-      outline: none;
-      border-color: var(--cd-yellow);
-    }
-
-    /* FEEDBACK ALERTS */
-    .feedback-alert {
-      padding: 12px 16px;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      margin-top: 10px;
-      display: none;
-    }
-
-    .feedback-alert.error {
-      display: block;
-      background-color: rgba(255, 102, 0, 0.2);
-      border: 1px solid var(--cd-orange);
-      color: var(--cd-orange);
-    }
-
-    .feedback-alert.success {
-      display: block;
-      background-color: rgba(0, 255, 102, 0.15);
-      border: 1px solid var(--cd-green);
-      color: var(--cd-green);
-    }
-
-    /* NAVIGATION BUTTONS */
-    .action-zone {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px dashed var(--cd-border);
-      display: flex;
-      justify-content: flex-end;
-      flex-shrink: 0;
-    }
-
-    .btn {
-      background-color: #000000;
-      color: #ffffff;
-      border: 2px solid var(--cd-yellow);
-      padding: 14px 28px;
-      font-size: 0.95rem;
-      font-weight: bold;
-      font-family: var(--cd-font);
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 0 #cca300;
-    }
-
-    .btn:hover {
-      background-color: #111111;
-      color: #ffffff;
-    }
-
-    .btn:active {
-      transform: translateY(4px);
-      box-shadow: 0 0 0 #cca300;
-    }
-
-    .btn-danger {
-      background-color: #000000;
-      border-color: var(--cd-orange);
-      color: #ffffff;
-      box-shadow: 0 4px 0 #cc5200;
-    }
-
-    .btn-danger:hover {
-      background-color: #111111;
-      color: #ffffff;
-    }
-
-    .btn-danger:active {
-      box-shadow: 0 0 0 #cc5200;
-    }
-
-    /* FOOTER TRACKER */
-    footer {
-      background-color: #0b0e11;
-      border-top: 1px solid var(--cd-border);
-      padding: 10px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      flex-shrink: 0;
-    }
-
-    .progress-tracker {
-      display: flex;
-      gap: 10px;
+    /* Scanner line aesthetic effect */
+    .scanline {
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0),
+        rgba(0,255,102,0.15),
+        rgba(255,255,255,0)
+      );
+      background-size: 100% 8px;
     }
 
     .step-dot {
-      width: 28px;
+      width: 24px;
       height: 10px;
-      background-color: var(--cd-border);
       border-radius: 3px;
+      background-color: var(--cd-border);
       transition: all 0.3s ease;
     }
 
-    /* COMPLETED DOT INTERACTIVITY */
     .step-dot.completed {
       background-color: var(--cd-green);
       cursor: pointer;
-      box-shadow: 0 0
+    }
+
+    .step-dot.current {
+      background-color: var(--cd-yellow);
+      box-shadow: 0 0 8px var(--cd-yellow);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- BUNKER HEADER -->
+  <header class="bg-[#003366] border-b-4 border-[#ffcc00] p-4 sticky top-0 z-50 scanline shadow-lg">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <div class="flex items-center space-x-3">
+        <div class="w-3.5 h-3.5 bg-[#ff6600] rounded-full animate-ping"></div>
+        <div>
+          <h1 class="text-xs font-bold tracking-widest text-[#ffcc00] uppercase">NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</h1>
+          <h2 class="text-xl font-extrabold text-white tracking-tight">TĀMAKI EMERGENCY BUNKER #07</h2>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs font-mono">
+        <span class="px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#ffcc00] rounded">SECTOR: SOUTH AUCKLAND</span>
+        <span id="status-tag" class="px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#ff6600] rounded">STATUS: LOCKDOWN</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN ESCAPE ROOM CONTAINER -->
+  <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
+
+    <div class="bg-[#1e242b] border-2 border-[#333d47] rounded-xl shadow-2xl p-6 flex flex-col space-y-6">
+
+      <!-- STAGE HEADER METADATA -->
+      <div class="flex justify-between items-center border-b border-[#333d47] pb-3 text-xs font-mono text-slate-400">
+        <span id="stage-id-text" class="text-[#ffcc00] font-bold">SYS_ID: INTRO_PAGE</span>
+        <span>SECURITY LEVEL: RESTRICTED</span>
+      </div>
+
+      <!-- =======================================================
+           STAGE 0: INTRO BRIEFING
+      ======================================================== -->
+      <section id="stage-0" class="stage-block space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-[#ffcc00] mb-2 uppercase">Message from Civil Defence</h2>
+          <p class="text-slate-300 text-sm">Emergency transmission broadcast from South Auckland command center.</p>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Video Container (16:9 Aspect Ratio) -->
+          <div class="relative w-full max-w-3xl mx-auto aspect-video bg-black rounded-lg border-2 border-[#ffcc00] overflow-hidden shadow-lg flex items-center justify-center">
+            <video controls class="w-full h-full object-contain">
+              <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
+              <source src="Tāmaki-river-video-Intro.mp4" type="video/mp4">
+              <p class="text-slate-400 text-sm p-4 text-center">Video Feed Unavailable: Tāmaki River Emergency Briefing video.</p>
+            </video>
+          </div>
+
+          <!-- Broadcast Transcript -->
+          <div class="bg-[#12161a] border-l-4 border-[#ffcc00] border-t border-r border-b border-[#333d47] p-4 rounded text-sm space-y-2">
+            <h3 class="text-[#ffcc00] font-bold text-xs uppercase tracking-wider">BROADCAST TRANSCRIPT:</h3>
+            <p class="text-slate-200 leading-relaxed">
+              "We are having problems with a huge animal in the river causing flooding in Otahuhu which could spread. The animal has moved to the Parnell lagoon for now but we don’t have a lot of time if it decides to come back out again. We need your help to find out how to deal with this animal before more violent parties try to take things into their own hands."
+            </p>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-4 border-t border-[#333d47]">
+          <button type="button" onclick="goToStage(1)" class="action-btn !border-[#ff6600] hover:!border-[#ffcc00]">
+            START INVESTIGATION (STAGE 1) →
+          </button>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           STAGE 1: ROOM 1 - TACTICAL IDENTIFICATION
+      ======================================================== -->
+      <section id="stage-1" class="stage-block hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-[#ffcc00] mb-1 uppercase">Room 1: Intelligence Analysis</h2>
+          <p class="text-slate-300 text-sm">Review tactical updates and select the verified entity report to proceed.</p>
+        </div>
+
+        <!-- Tactical Briefing Box -->
+        <div class="bg-[#12161a] border-l-4 border-[#ffcc00] border-t border-r border-b border-[#333d47] p-4 rounded text-sm space-y-2">
+          <h3 class="text-[#ffcc00] font-bold text-xs uppercase tracking-wider">TACTICAL BRIEFING DIRECTIVE</h3>
+          <p class="text-slate-200 leading-relaxed">
+            Emergency sensors confirm the creature has taken temporary refuge in Parnell Lagoon. According to sightings the animal in the Tāmaki river has scaly skin like a reptile rather than fish scales. Might be an invasive species coming in and the floods are coincidental. Some witnesses say that the animal had a lot of limbs trailing behind it when it moved and there are cases of large animals of these species, however, they are salt water creatures so they wouldn't be able to stay long. Ancient myths that used to live in waterways, some of the locals believe it could be one of them and would explain the link between the flooding and the appearance of the animal.
+          </p>
+        </div>
+
+        <!-- Video Feed Stage 1 -->
+        <div class="relative w-full max-w-2xl mx-auto aspect-video bg-black rounded-lg border-2 border-[#333d47] overflow-hidden shadow-lg flex items-center justify-center">
+          <video controls class="w-full h-full object-contain">
+            <source src="./River-sighting-video.mp4" type="video/mp4">
+            <source src="River-sighting-video.mp4" type="video/mp4">
+            <p class="text-slate-400 text-sm p-4 text-center">Video Feed Offline: River Sighting Video.</p>
+          </video>
+        </div>
+
+        <!-- Paragraph Options -->
+        <div class="space-y-3">
+          <h3 class="text-xs font-mono font-bold text-[#ffcc00] uppercase tracking-wider">SELECT TACTICAL ASSESSMENT:</h3>
+
+          <!-- Option 1 -->
+          <button type="button" id="r1-opt-1" onclick="checkRoom1Option(1)" class="para-opt-btn">
+            <span class="font-bold text-base text-white">Option A: Ureia</span>
+            <span class="text-xs text-slate-300 font-normal leading-normal">
+              <strong>Appearance:</strong> A majestic sea creature, often depicted in tribal carvings as a large lizard or sea monster.<br>
+              <strong>Location:</strong> The Hauraki Gulf and the Hauraki/Pūponga waters near the Manukau Harbour entrance.<br>
+              <strong>Background:</strong> Ureia was a celebrated guardian taniwha associated with the fertility and prestige of the Hauraki people. He was known to guide canoes, clear safe passage through dangerous reef channels, and interact peacefully with local tribes.
+            </span>
+          </button>
+
+          <!-- Option 2 -->
+          <button type="button" id="r1-opt-2" onclick="checkRoom1Option(2)" class="para-opt-btn">
+            <span class="font-bold text-base text-white">Option B: Kaiwhare</span>
+            <span class="text-xs text-slate-300 font-normal leading-normal">
+              <strong>Appearance:</strong> Manifests as a massive, whale-sized sea creature or giant stingray.<br>
+              <strong>Location:</strong> The mouth and waters of the Manukau Harbour, as well as an underwater cavern south of Piha.<br>
+              <strong>Background:</strong> Kaiwhare originally served as a guardian who helped bring the ancestor Hape across the ocean. Over time, however, Kaiwhare grew fierce and began attacking local fishermen and capsizing waka before being tamed by chief Tāmure.
+            </span>
+          </button>
+
+          <!-- Option 3 (CORRECT) -->
+          <button type="button" id="r1-opt-3" onclick="checkRoom1Option(3)" class="para-opt-btn">
+            <span class="font-bold text-base text-white">Option C: Te Moko-ika-a-hiku-waru</span>
+            <span class="text-xs text-slate-300 font-normal leading-normal">
+              <strong>Appearance:</strong> A grand, sea-dwelling lizard-fish endowed with eight distinct tails/limbs trailing behind it.<br>
+              <strong>Location:</strong> Te Wai-o-Taiki and the surrounding Tāmaki River waterways.<br>
+              <strong>Background:</strong> Te Moko-ika-a-hiku-waru was a protective kaitiaki (guardian) who accompanied the historic Tainui waka on its journey to Aotearoa, remaining in local waters to safeguard surrounding bays and inland waterways.
+            </span>
+          </button>
+
+          <!-- Option 4 -->
+          <button type="button" id="r1-opt-4" onclick="checkRoom1Option(4)" class="para-opt-btn">
+            <span class="font-bold text-base text-white">Option D: Horotiu</span>
+            <span class="text-xs text-slate-300 font-normal leading-normal">
+              <strong>Appearance:</strong> A subterranean water spirit, often described as an aquatic serpent or giant lizard.<br>
+              <strong>Location:</strong> The Waihorotiu Stream beneath modern Queen Street in downtown Auckland.<br>
+              <strong>Background:</strong> Horotiu is the ancient guardian spirit of the central valley stream feeding into Waitematā Harbour, associated with subterranean urban water channels.
+            </span>
+          </button>
+        </div>
+
+        <div id="r1-feedback" class="hidden p-4 rounded text-sm font-mono border"></div>
+
+        <div id="r1-next-action" class="hidden justify-end pt-4 border-t border-[#333d47]">
+          <button type="button" onclick="goToStage(2)" class="action-btn !border-[#00ff66]">
+            ENTER ROOM 2: CONTROL CENTRE →
+          </button>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           STAGE 2: ROOM 2 - MAP ANALYSIS & SYMBOL OVERRIDE
+      ======================================================== -->
+      <section id="stage-2" class="stage-block hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-[#ffcc00] mb-1 uppercase">Room 2: Estuarine Chart Analysis</h2>
+          <p class="text-slate-300 text-sm">Analyze the chart, locate the traditional symbol, and submit its name.</p>
+        </div>
+
+        <div class="bg-[#12161a] border-l-4 border-[#ffcc00] border-t border-r border-b border-[#333d47] p-4 rounded text-sm space-y-1">
+          <h3 class="text-[#ffcc00] font-bold text-xs uppercase tracking-wider">TACTICAL BRIEFING DIRECTIVE</h3>
+          <p class="text-slate-200">
+            Use the interactive chart viewer below. Zoom in and drag across the chart map to locate the embedded traditional Maori symbol representing eternal flow and connection. Enter its exact name below to bypass security override locks.
+          </p>
+        </div>
+
+        <!-- Zoomable Viewer Container -->
+        <div class="zoom-container">
+          <div class="zoom-viewport" id="zoom-viewport">
+            <img id="zoom-image" class="zoom-img" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&q=80" alt="Tactical Estuarine Chart" />
+          </div>
+          <div class="absolute bottom-3 right-3 flex gap-2 z-10">
+            <button type="button" onclick="zoomIn()" class="px-3 py-1.5 text-xs font-mono">[ + ZOOM ]</button>
+            <button type="button" onclick="zoomOut()" class="px-3 py-1.5 text-xs font-mono">[ - ZOOM ]</button>
+            <button type="button" onclick="resetZoom()" class="px-3 py-1.5 text-xs font-mono">[ ↺ RESET ]</button>
+          </div>
+        </div>
+
+        <!-- Override Input Field -->
+        <div class="bg-[#12161a] border border-[#333d47] p-4 rounded-lg space-y-3">
+          <label for="room2-answer" class="block text-xs font-mono font-bold text-[#ffcc00] uppercase tracking-wider">
+            ENTER TRADITIONAL SYMBOL NAME:
+          </label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input type="text" id="room2-answer" placeholder="Type symbol name here..." class="flex-1 bg-black border-2 border-[#333d47] rounded px-4 py-2 text-white font-mono text-base focus:outline-none focus:border-[#ffcc00]" />
+            <button type="button" onclick="checkRoom2Answer()" class="action-btn">SUBMIT CODE</button>
+          </div>
+          <div id="r2-feedback" class="hidden p-3 rounded text-sm font-mono border"></div>
+        </div>
+
+        <div id="r2-next-action" class="hidden justify-end pt-4 border-t border-[#333d47]">
+          <button type="button" onclick="goToStage(3)" class="action-btn !border-[#00ff66]">
+            ENTER ROOM 3: RECTIFICATION BAY →
+          </button>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           STAGES 3, 4, 5 (PLACEHOLDERS)
+      ======================================================== -->
+      <section id="stage-3" class="stage-block hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-[#ffcc00] uppercase">Room 3: Rectification Bay</h2>
+          <p class="text-slate-300 text-sm mt-2">Containment diversion controls active. Relocation parameters calibrated.</p>
+        </div>
+        <div class="p-4 bg-[#12161a] border border-[#333d47] rounded font-mono text-xs text-[#00ff66]">
+          [SECTOR STATUS: CONTAINMENT DIVERSION READY]
+        </div>
+        <div class="flex justify-end pt-4 border-t border-[#333d47]">
+          <button type="button" onclick="goToStage(4)" class="action-btn">
+            ENTER ROOM 4: COMMUNICATION HUB →
+          </button>
+        </div>
+      </section>
+
+      <section id="stage-4" class="stage-block hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-[#ffcc00] uppercase">Room 4: Communication Hub</h2>
+          <p class="text-slate-300 text-sm mt-2">Regional emergency response frequencies synchronized.</p>
+        </div>
+        <div class="p-4 bg-[#12161a] border border-[#333d47] rounded font-mono text-xs text-[#00ff66]">
+          [SECTOR STATUS: REGIONAL BROADCAST READY]
+        </div>
+        <div class="flex justify-end pt-4 border-t border-[#333d47]">
+          <button type="button" onclick="goToStage(5)" class="action-btn">
+            ENTER ROOM 5: EVACUATION GATEWAY →
+          </button>
+        </div>
+      </section>
+
+      <section id="stage-5" class="stage-block hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-[#ffcc00] uppercase">Room 5: Evacuation Gateway</h2>
+          <p class="text-slate-300 text-sm mt-2">Final system override prepared. Initiate hatch seal release sequence.</p>
+        </div>
+        <div class="p-4 bg-[#12161a] border border-[#333d47] rounded font-mono text-xs text-[#00ff66]">
+          [SECTOR STATUS: LOCKDOWN UNSEAL READY]
+        </div>
+        <div class="flex justify-end pt-4 border-t border-[#333d47]">
+          <button type="button" onclick="goToStage(6)" class="action-btn !border-[#00ff66]">
+            UNSEAL BUNKER HATCH →
+          </button>
+        </div>
+      </section>
+
+      <!-- =======================================================
+           STAGE 6: CONCLUSION
+      ======================================================== -->
+      <section id="stage-6" class="stage-block hidden text-center space-y-6 py-6">
+        <div class="w-16 h-16 bg-[#00ff66]/10 border-2 border-[#00ff66] rounded-full flex items-center justify-center mx-auto text-[#00ff66] text-3xl font-bold">
+          ✓
+        </div>
+        <h2 class="text-3xl font-bold text-white uppercase">Operation Complete</h2>
+        <p class="text-slate-300 max-w-xl mx-auto leading-relaxed text-sm">
+          You have successfully identified <strong>Te Moko-ika-a-hiku-waru</strong>, bypassed security locks, diverted flood hazards, and safely unsealed Tāmaki Emergency Bunker #07.
+        </p>
+        <div class="pt-4">
+          <button type="button" onclick="goToStage(0)" class="action-btn">
+            ↺ REBOOT SYSTEM PROTOCOL
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER TRACKER -->
+  <footer class="bg-[#12161a] border-t border-[#333d47] p-4 sticky bottom-0 z-40">
+    <div class="max-w-3xl mx-auto flex items-center justify-between">
+      <span class="text-xs font-mono text-slate-400 uppercase">OPERATIONAL PROGRESS:</span>
+      <div class="flex items-center gap-2">
+        <div id="dot-1" class="step-dot" onclick="jumpToStage(1)" title="Room 1"></div>
+        <div id="dot-2" class="step-dot" onclick="jumpToStage(2)" title="Room 2"></div>
+        <div id="dot-3" class="step-dot" onclick="jumpToStage(3)" title="Room 3"></div>
+        <div id="dot-4" class="step-dot" onclick="jumpToStage(4)" title="Room 4"></div>
+        <div id="dot-5" class="step-dot" onclick="jumpToStage(5)" title="Room 5"></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SYSTEM INTERACTION SCRIPTS -->
+  <script>
+    let currentStage = 0;
+    let maxUnlockedStage = 0;
+
+    // Stage Navigation Handler
+    function goToStage(stageNum) {
+      // Hide all stages
+      for (let i = 0; i <= 6; i++) {
+        const stageEl = document.getElementById(`stage-${i}`);
+        if (stageEl) {
+          stageEl.classList.add('hidden');
+        }
+      }
+
+      // Unhide targeted stage
+      const targetStage = document.getElementById(`stage-${stageNum}`);
+      if (targetStage) {
+        targetStage.classList.remove('hidden');
+        currentStage = stageNum;
+        if (stageNum > maxUnlockedStage) {
+          maxUnlockedStage = stageNum;
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Update stage indicator label
+      const stageLabel = document.getElementById('stage-id-text');
+      if (stageLabel) {
+        if (stageNum === 0) stageLabel.innerText = 'SYS_ID: INTRO_PAGE';
+        else if (stageNum === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
+        else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${stageNum}`;
+      }
+
+      // Update Header Status Tag
+      const statusTag = document.getElementById('status-tag');
+      if (statusTag) {
+        if (stageNum === 6) {
+          statusTag.innerText = 'STATUS: UNLOCKED';
+          statusTag.className = 'px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#00ff66] rounded';
+        } else {
+          statusTag.innerText = 'STATUS: LOCKDOWN';
+          statusTag.className = 'px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#ff6600] rounded';
+        }
+      }
+
+      // Refresh Footer Dots
+      for (let i = 1; i <= 5; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (dot) {
+          if (i === currentStage) {
+            dot.className = 'step-dot current';
+          } else if (i <= maxUnlockedStage) {
+            dot.className = 'step-dot completed';
+          } else {
+            dot.className = 'step-dot';
+          }
+        }
+      }
+    }
+
+    // Interactive Dot Jump Helper
+    function jumpToStage(num) {
+      if (num <= maxUnlockedStage) {
+        goToStage(num);
+      }
+    }
+
+    // Room 1 Answer Validation
+    function checkRoom1Option(optionIndex) {
+      for (let i = 1; i <= 4; i++) {
+        const btn = document.getElementById(`r1-opt-${i}`);
+        if (btn) {
+          btn.classList.remove('correct', 'incorrect');
+        }
+      }
+
+      const fb = document.getElementById('r1-feedback');
+      const nextAction = document.getElementById('r1-next-action');
+
+      if (optionIndex === 3) {
+        const correctBtn = document.getElementById('r1-opt-3');
+        if (correctBtn) correctBtn.classList.add('correct');
+
+        fb.className = 'p-4 rounded text-sm font-mono border bg-[#052e16] border-[#00ff66] text-[#00ff66] block';
+        fb.innerHTML = '<strong>✓ IDENTIFICATION CONFIRMED:</strong> Entity matched to <em>Te Moko-ika-a-hiku-waru</em>. Room 2 access granted.';
+
+        if (nextAction) {
+          nextAction.classList.remove('hidden');
+          nextAction.classList.add('flex');
+        }
+        if (maxUnlockedStage < 2) maxUnlockedStage = 2;
+      } else {
+        const wrongBtn = document.getElementById(`r1-opt-${optionIndex}`);
+        if (wrongBtn) wrongBtn.classList.add('incorrect');
+
+        fb.className = 'p-4 rounded text-sm font-mono border bg-[#450a0a] border-[#ff6600] text-[#ff6600] block';
+        fb.innerHTML = '<strong>✖ INSUFFICIENT MATCH:</strong> Selected entity profile does not match multi-limbed reptilian reports. Review briefing notes and retry.';
+
+        if (nextAction) {
+          nextAction.classList.add('hidden');
+          nextAction.classList.remove('flex');
+        }
+      }
+    }
+
+    // Room 2 Map Zoom & Drag Handling with Clamped Boundaries
+    let zoomScale = 1;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    const viewport = document.getElementById('zoom-viewport');
+    const img = document.getElementById('zoom-image');
+
+    function clampBoundaries() {
+      if (!viewport) return;
+      const containerWidth = viewport.clientWidth;
+      const containerHeight = viewport.clientHeight;
+
+      const scaledWidth = containerWidth * zoomScale;
+      const scaledHeight = containerHeight * zoomScale;
+
+      const minX = containerWidth - scaledWidth;
+      const minY = containerHeight - scaledHeight;
+
+      panX = Math.min(0, Math.max(minX, panX));
+      panY = Math.min(0, Math.max(minY, panY));
+    }
+
+    function updateTransform() {
+      clampBoundaries();
+      if (img) {
+        img.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+      }
+    }
+
+    function zoomIn() {
+      zoomScale = Math.min(zoomScale + 0.4, 3.5);
+      updateTransform();
+    }
+
+    function zoomOut() {
+      zoomScale = Math.max(zoomScale - 0.4, 1);
+      if (zoomScale === 1) {
+        panX = 0;
+        panY = 0;
+      }
+      updateTransform();
+    }
+
+    function resetZoom() {
+      zoomScale = 1;
+      panX = 0;
+      panY = 0;
+      updateTransform();
+    }
+
+    if (viewport) {
+      viewport.addEventListener('mousedown', (e) => {
+        if (zoomScale <= 1) return;
+        isDragging = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        updateTransform();
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      viewport.addEventListener('touchstart', (e) => {
+        if (zoomScale <= 1) return;
+        if (e.touches.length === 1) {
+          isDragging = true;
+          startX = e.touches[0].clientX - panX;
+          startY = e.touches[0].clientY - panY;
+        }
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        panX = e.touches[0].clientX - startX;
+        panY = e.touches[0].clientY - startY;
+        updateTransform();
+      });
+
+      window.addEventListener('touchend', () => { isDragging = false; });
+    }
+
+    // Room 2 Answer Check
+    function checkRoom2Answer() {
+      const inputEl = document.getElementById('room2-answer');
+      const val = inputEl ? inputEl.value.trim().toLowerCase() : '';
+      const fb = document.getElementById('r2-feedback');
+      const nextAction = document.getElementById('r2-next-action');
+
+      if (val === 'pikorua') {
+        fb.className = 'p-3 rounded text-sm font-mono border bg-[#052e16] border-[#00ff66] text-[#00ff66] block';
+        fb.innerHTML = '<strong>✓ OVERRIDE ACCEPTED:</strong> Pikorua symbol confirmed. Access to Rectification Bay unlocked.';
+        if (nextAction) {
+          nextAction.classList.remove('hidden');
+          nextAction.classList.add('flex');
+        }
+        if (maxUnlockedStage < 3) maxUnlockedStage = 3;
+      } else {
+        fb.className = 'p-3 rounded text-sm font-mono border bg-[#450a0a] border-[#ff6600] text-[#ff6600] block';
+        fb.innerHTML = '<strong>✖ OVERRIDE REJECTED:</strong> Incorrect symbol code. Re-examine the chart and try again.';
+        if (nextAction) {
+          nextAction.classList.add('hidden');
+          nextAction.classList.remove('flex');
+        }
+      }
+    }
+
+    // Ensure Stage 0 displays on initial load
+    window.onload = function() {
+      goToStage(0);
+    };
+  </script>
+</body>
+</html>
