@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</title>
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
       --cd-yellow: #ffcc00;
@@ -15,624 +14,1109 @@
       --cd-border: #333d47;
       --cd-green: #00ff66;
       --cd-text: #ffffff;
+      --cd-font: Arial, Helvetica, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     body {
-      background-color: var(--cd-dark);
-      color: var(--cd-text);
-      font-family: Arial, Helvetica, sans-serif !important;
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      background-color: var(--cd-dark);
+      color: var(--cd-text);
+      font-family: var(--cd-font);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* HEADER BAR */
+    header {
+      background-color: var(--cd-blue);
+      border-bottom: 4px solid var(--cd-yellow);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge {
+      background-color: var(--cd-yellow);
+      color: #000;
+      font-weight: bold;
+      padding: 4px 8px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+    }
+
+    .title {
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      color: #fff;
+    }
+
+    .status-bar {
+      display: flex;
+      gap: 16px;
+      font-size: 0.8rem;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--cd-green);
+      box-shadow: 0 0 8px var(--cd-green);
+    }
+
+    .indicator.alert {
+      background-color: var(--cd-orange);
+      box-shadow: 0 0 8px var(--cd-orange);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0.3; }
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .bunker-card {
+      background-color: var(--cd-panel);
+      border: 2px solid var(--cd-border);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: #171c22;
+      border-bottom: 1px solid var(--cd-border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #8899a6;
+      flex-shrink: 0;
+    }
+
+    .card-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
     }
 
-    /* Strict button styling per requirements */
-    button, .option-btn, .action-btn {
-      background-color: #000000 !important;
-      color: #ffffff !important;
-      font-family: Arial, Helvetica, sans-serif !important;
-      border: 2px solid var(--cd-border);
-      border-radius: 6px;
-      padding: 12px 20px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
+    /* STRICT STAGE ISOLATION */
+    .stage {
+      display: none !important;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
     }
 
-    button:hover, .option-btn:hover, .action-btn:hover {
+    .stage.active {
+      display: flex !important;
+    }
+
+    h1, h2, h3 {
+      color: var(--cd-yellow);
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 1.3rem;
+    }
+
+    p {
+      line-height: 1.5;
+      font-size: 1rem;
+      color: var(--cd-text);
+    }
+
+    /* BRIEFING BOX */
+    .briefing-box {
+      background-color: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--cd-border);
+      border-left: 5px solid var(--cd-yellow);
+      padding: 14px 16px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .briefing-title {
+      color: var(--cd-yellow);
+      font-weight: bold;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    /* MEDIA CONTAINER */
+    .media-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: min(40vh, 280px);
+      aspect-ratio: 16 / 9;
+      background-color: #000;
+      border: 2px solid var(--cd-yellow);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+      flex-shrink: 0;
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .transcript-box {
+      width: 100%;
+      background-color: rgba(10, 14, 18, 0.85);
+      border: 1px solid var(--cd-border);
+      border-left: 5px solid var(--cd-yellow);
+      padding: 16px;
+      border-radius: 4px;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #ffffff;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .transcript-title {
+      color: var(--cd-yellow);
+      font-weight: bold;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    /* ROOM 1 PARAGRAPH BUTTON GRID */
+    .paragraph-options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .para-opt-btn {
+      background-color: #000000 !important;
+      border: 2px solid var(--cd-border);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--cd-font);
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .para-opt-btn:hover {
       border-color: var(--cd-yellow);
       background-color: #111111 !important;
     }
 
-    /* Option button specific layout */
-    .para-opt-btn {
-      width: 100%;
-      text-align: left;
+    .para-btn-title {
+      font-weight: bold;
+      color: #ffffff !important;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+    }
+
+    .para-btn-body {
+      color: #ffffff !important;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+      white-space: pre-line;
+    }
+
+    /* ROOM 2 POUNAMU TAONGA GRID */
+    .taonga-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .taonga-card {
+      background-color: #000000;
+      border: 2px solid var(--cd-border);
+      border-radius: 6px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      padding: 16px !important;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .para-opt-btn.correct {
-      border-color: var(--cd-green) !important;
-      background-color: #052e16 !important;
+    .taonga-card:hover:not(.disabled) {
+      border-color: var(--cd-yellow);
+      background-color: #111a22;
     }
 
-    .para-opt-btn.incorrect {
-      border-color: var(--cd-orange) !important;
-      background-color: #450a0a !important;
+    .taonga-card.selected {
+      border-color: var(--cd-yellow);
+      box-shadow: 0 0 10px var(--cd-yellow);
     }
 
-    /* Zoomable Viewer Box */
-    .zoom-container {
-      position: relative;
+    .taonga-card.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .taonga-img-frame {
       width: 100%;
-      height: 320px;
-      background-color: #000000;
-      border: 2px solid var(--cd-yellow);
-      border-radius: 6px;
+      height: 140px;
+      background-color: #0b0f14;
+      border: 1px solid var(--cd-border);
+      border-radius: 4px;
       overflow: hidden;
-      touch-action: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .zoom-viewport {
-      width: 100%;
-      height: 100%;
-      cursor: grab;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .zoom-viewport:active {
-      cursor: grabbing;
-    }
-
-    .zoom-img {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .taonga-img-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transform-origin: 0 0;
-      user-select: none;
-      pointer-events: none;
     }
 
-    /* Scanner line aesthetic effect */
-    .scanline {
-      background: linear-gradient(
-        to bottom,
-        rgba(255,255,255,0),
-        rgba(255,255,255,0),
-        rgba(0,255,102,0.15),
-        rgba(255,255,255,0)
-      );
-      background-size: 100% 8px;
+    .taonga-title {
+      color: var(--cd-yellow);
+      font-weight: bold;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    .taonga-desc {
+      font-size: 0.8rem;
+      color: #cccccc;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    /* ROOM 2 ATTEMPT COUNTER */
+    .attempt-tracker-box {
+      background-color: #0e1216;
+      border: 1px solid var(--cd-border);
+      padding: 8px 12px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+    }
+
+    /* MATH RECOVERY PANEL */
+    .math-panel {
+      background-color: rgba(255, 102, 0, 0.1);
+      border: 2px solid var(--cd-orange);
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .math-panel.active {
+      display: flex;
+    }
+
+    .math-q-box {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--cd-yellow);
+    }
+
+    /* ROOM 2 INPUT BOX */
+    .answer-box {
+      background-color: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--cd-border);
+      padding: 16px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .text-input {
+      flex: 1;
+      background-color: #000000;
+      border: 2px solid var(--cd-border);
+      color: #ffffff;
+      font-family: var(--cd-font);
+      font-size: 1.1rem;
+      padding: 12px 16px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: var(--cd-yellow);
+    }
+
+    .text-input:disabled {
+      background-color: #1a1a1a;
+      cursor: not-allowed;
+    }
+
+    /* FEEDBACK ALERTS */
+    .feedback-alert {
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .feedback-alert.error {
+      display: block;
+      background-color: rgba(255, 102, 0, 0.2);
+      border: 1px solid var(--cd-orange);
+      color: var(--cd-orange);
+    }
+
+    .feedback-alert.success {
+      display: block;
+      background-color: rgba(0, 255, 102, 0.15);
+      border: 1px solid var(--cd-green);
+      color: var(--cd-green);
+    }
+
+    /* NAVIGATION BUTTONS */
+    .action-zone {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--cd-border);
+      display: flex;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      background-color: #000000;
+      color: #ffffff;
+      border: 2px solid var(--cd-yellow);
+      padding: 14px 28px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      font-family: var(--cd-font);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 0 #cca300;
+    }
+
+    .btn:hover {
+      background-color: #111111;
+      color: #ffffff;
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 0 #cca300;
+    }
+
+    .btn-danger {
+      background-color: #000000;
+      border-color: var(--cd-orange);
+      color: #ffffff;
+      box-shadow: 0 4px 0 #cc5200;
+    }
+
+    .btn-danger:hover {
+      background-color: #111111;
+      color: #ffffff;
+    }
+
+    .btn-danger:active {
+      box-shadow: 0 0 0 #cc5200;
+    }
+
+    /* FOOTER TRACKER */
+    footer {
+      background-color: #0b0e11;
+      border-top: 1px solid var(--cd-border);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .progress-tracker {
+      display: flex;
+      gap: 10px;
     }
 
     .step-dot {
-      width: 24px;
+      width: 28px;
       height: 10px;
-      border-radius: 3px;
       background-color: var(--cd-border);
+      border-radius: 3px;
       transition: all 0.3s ease;
     }
 
     .step-dot.completed {
       background-color: var(--cd-green);
       cursor: pointer;
+      box-shadow: 0 0 6px rgba(0, 255, 102, 0.4);
+    }
+
+    .step-dot.completed:hover {
+      transform: scaleY(1.3);
+      background-color: #66ffa3;
+      box-shadow: 0 0 10px var(--cd-green);
     }
 
     .step-dot.current {
       background-color: var(--cd-yellow);
-      box-shadow: 0 0 8px var(--cd-yellow);
     }
   </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
 
-  <!-- BUNKER HEADER -->
-  <header class="bg-[#003366] border-b-4 border-[#ffcc00] p-4 sticky top-0 z-50 scanline shadow-lg">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
-      <div class="flex items-center space-x-3">
-        <div class="w-3.5 h-3.5 bg-[#ff6600] rounded-full animate-ping"></div>
-        <div>
-          <h1 class="text-xs font-bold tracking-widest text-[#ffcc00] uppercase">NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</h1>
-          <h2 class="text-xl font-extrabold text-white tracking-tight">TĀMAKI EMERGENCY BUNKER #07</h2>
-        </div>
+  <!-- HEADER NAVIGATION BAR -->
+  <header>
+    <div class="brand">
+      <div class="badge">CIVIL DEFENCE</div>
+      <div class="title">TĀMAKI EMERGENCY BUNKER #07</div>
+    </div>
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="indicator alert" id="system-status"></div>
+        <span id="status-text">LOCKDOWN ACTIVE</span>
       </div>
-      <div class="flex items-center gap-3 text-xs font-mono">
-        <span class="px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#ffcc00] rounded">SECTOR: SOUTH AUCKLAND</span>
-        <span id="status-tag" class="px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#ff6600] rounded">STATUS: LOCKDOWN</span>
+      <div class="status-item">
+        <span>SECTOR: SOUTH AUCKLAND</span>
       </div>
     </div>
   </header>
 
-  <!-- MAIN ESCAPE ROOM CONTAINER -->
-  <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
-
-    <div class="bg-[#1e242b] border-2 border-[#333d47] rounded-xl shadow-2xl p-6 flex flex-col space-y-6">
-
-      <!-- STAGE HEADER METADATA -->
-      <div class="flex justify-between items-center border-b border-[#333d47] pb-3 text-xs font-mono text-slate-400">
-        <span id="stage-id-text" class="text-[#ffcc00] font-bold">SYS_ID: INTRO_PAGE</span>
+  <!-- MAIN ESCAPE ROOM STAGE CONTAINER -->
+  <main>
+    <div class="bunker-card">
+      <div class="card-header">
+        <span id="stage-id">SYS_ID: INTRO_PAGE</span>
         <span>SECURITY LEVEL: RESTRICTED</span>
       </div>
 
-      <!-- =======================================================
-           STAGE 0: INTRO BRIEFING
-      ======================================================== -->
-      <section id="stage-0" class="stage-block space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold text-[#ffcc00] mb-2 uppercase">Message from Civil Defence</h2>
-          <p class="text-slate-300 text-sm">Emergency transmission broadcast from South Auckland command center.</p>
-        </div>
+      <div class="card-body">
 
-        <div class="space-y-4">
-          <!-- Video Container (16:9 Aspect Ratio) -->
-          <div class="relative w-full max-w-3xl mx-auto aspect-video bg-black rounded-lg border-2 border-[#ffcc00] overflow-hidden shadow-lg flex items-center justify-center">
-            <video controls class="w-full h-full object-contain">
-              <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
-              <source src="Tāmaki-river-video-Intro.mp4" type="video/mp4">
-              <p class="text-slate-400 text-sm p-4 text-center">Video Feed Unavailable: Tāmaki River Emergency Briefing video.</p>
-            </video>
+        <!-- =======================================================
+             MAIN INTRODUCTION PAGE (STAGE 0)
+        ======================================================== -->
+        <section id="stage-0" class="stage active">
+          <div>
+            <h1>Message from Civil Defence</h1>
+            
+            <div class="media-container">
+              <div class="video-wrapper">
+                <video controls playsinline webkit-playsinline preload="metadata">
+                  <source src="./Tāmaki-river-video-Intro.mp4" type="video/mp4">
+                  <source src="Tāmaki-river-video-Intro.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              <div class="transcript-box">
+                <div class="transcript-title">Broadcast Transcript:</div>
+                <p style="margin: 0;">"We are having problems with a huge animal in the river causing flooding in Otahuhu which could spread. The animal has moved to the Parnell lagoon for now but we don’t have a lot of time if it decides to come back out again. We need your help to find out how to deal with this animal before more violent parties try to take things into their own hands."</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="action-zone">
+            <button class="btn btn-danger" type="button" onclick="nextStage(1)">START INVESTIGATION (STAGE 1) →</button>
+          </div>
+        </section>
+
+        <!-- =======================================================
+             ROOM 1: STAGE 1
+        ======================================================== -->
+        <section id="stage-1" class="stage">
+          <div>
+            <h2>Stage 1: Intelligence Analysis</h2>
+            
+            <div class="briefing-box">
+              <div class="briefing-title">Tactical Briefing Directive</div>
+              Emergency response teams are evaluating hydrological anomalies along the Tāmaki River. Review the video footage update and analyze the 4 intelligence reports below. Determine the accurate operational assessment.
+            </div>
+
+            <div class="media-container">
+              <div class="video-wrapper">
+                <video controls playsinline webkit-playsinline preload="metadata">
+                  <source src="./River-sighting-video.mp4" type="video/mp4">
+                  <source src="River-sighting-video.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              <div class="transcript-box">
+                <div class="transcript-title">Civil Defence Broadcast Update:</div>
+                <p style="margin: 0;">"Emergency sensors confirm the creature has taken temporary refuge in Parnell Lagoon. Acording to sightings the animal in the Tāmaki river has scaly skin like a reptile rather then fish scales. Might be an invasive species coming in and the floods are coincedental. Some witnesses say that the animal had alot of limbs trainling behind it when it moved and there are cases of large animals of these species, however, they are salt water creatures so they wouldn't be able stay long. Aincent myths that used to live in waterways, some of the locals belive it could be one of themand would explain the link between the flooding and the apperance of the animal."</p>
+              </div>
+            </div>
+
+            <h3>Tactical Assessment Options (Select the correct report):</h3>
+            <div class="paragraph-options-grid">
+              
+              <button class="para-opt-btn" id="opt-btn-1" type="button" onclick="checkRoom1Option(1)">
+                <div class="para-btn-title">Option A: Ureia</div>
+                <p class="para-btn-body">Appearance: A majestic sea creature, often depicted in tribal carvings as a large lizard or sea monster.
+
+Location: The Hauraki Gulf and the Hauraki/Pūponga waters near the Manukau Harbour entrance.
+
+Background: Ureia was a celebrated guardian taniwha associated with the fertility and prestige of the Hauraki people. He was known to guide canoes, clear safe passage through dangerous reef channels, and interact peacefully with local tribes. Tricked and trapped in the Manukau Harbour by rival tribes, his tragic death led to great mourning across the region. Today, his memory lives on as an iconic symbol represented in ancestral carvings across Tāmaki Makaurau and Hauraki.</p>
+              </button>
+
+              <button class="para-opt-btn" id="opt-btn-2" type="button" onclick="checkRoom1Option(2)">
+                <div class="para-btn-title">Option B: Kaiwhare</div>
+                <p class="para-btn-body">Appearance: Manifests as a massive, whale-sized sea creature or giant stingray.   Location: The mouth and waters of the Manukau Harbour, as well as an underwater cavern south of Piha.   Background: Kaiwhare originally served as a guardian who helped bring the ancestor Hape across the ocean to the shores of the Manukau Harbour. Over time, however, Kaiwhare grew fierce and began attacking local fishermen and capsizing waka. The chief Tāmure eventually confronted and struck the monster with a magical club, taming him. Tamed rather than destroyed, Kaiwhare remains in the harbour today, peacefully feeding on crayfish and octopus.</p>
+              </button>
+
+              <button class="para-opt-btn" id="opt-btn-3" type="button" onclick="checkRoom1Option(3)">
+                <div class="para-btn-title">Option C: Te Moko-ika-a-hiku-waru</div>
+                <p class="para-btn-body">Appearance: A grand, sea-dwelling lizard-fish endowed with eight distinct tails. Location: Te Wai-o-Taiki and the surrounding ocean waters. Background: Te Moko-ika-a-hiku-waru was a protective kaitiaki (guardian) who accompanied the historic Tainui waka (voyaging canoe) on its journey to Aotearoa. As the canoe navigated up the Tāmaki River, this eight-tailed spirit remained in the local waters to safeguard the surrounding bays. He became deeply revered by local Māori as a sacred protector of the waterways.</p>
+              </button>
+
+              <button class="para-opt-btn" id="opt-btn-4" type="button" onclick="checkRoom1Option(4)">
+                <div class="para-btn-title">Option D: Horotiu</div>
+                <p class="para-btn-body">Appearance: A subterranean water spirit, often described as an aquatic serpent or giant lizard.
+
+Location: The Waihorotiu Stream, which flows beneath modern Queen Street in the Auckland CBD.
+
+Background: Horotiu is the ancient guardian spirit of the valley that forms the heart of downtown Auckland. He lived in and protected the pristine stream running from Aotea Square down to the Waitematā Harbour. When European settlers encased the stream into a subterranean brick sewer under Queen Street, Horotiu remained within the underground waters. Today, local traditions view him as the quiet spirit dwelling beneath the bustling city streets.</p>
+              </button>
+
+            </div>
+
+            <div id="r1-feedback" class="feedback-alert"></div>
+
           </div>
 
-          <!-- Broadcast Transcript -->
-          <div class="bg-[#12161a] border-l-4 border-[#ffcc00] border-t border-r border-b border-[#333d47] p-4 rounded text-sm space-y-2">
-            <h3 class="text-[#ffcc00] font-bold text-xs uppercase tracking-wider">BROADCAST TRANSCRIPT:</h3>
-            <p class="text-slate-200 leading-relaxed">
-              "We are having problems with a huge animal in the river causing flooding in Otahuhu which could spread. The animal has moved to the Parnell lagoon for now but we don’t have a lot of time if it decides to come back out again. We need your help to find out how to deal with this animal before more violent parties try to take things into their own hands."
-            </p>
+          <div class="action-zone" id="r1-next-action" style="display: none;">
+            <button class="btn btn-danger" type="button" onclick="nextStage(2)">ENTER ROOM 2: CONTROL CENTRE →</button>
           </div>
-        </div>
+        </section>
 
-        <div class="flex justify-end pt-4 border-t border-[#333d47]">
-          <button type="button" onclick="goToStage(1)" class="action-btn !border-[#ff6600] hover:!border-[#ffcc00]">
-            START INVESTIGATION (STAGE 1) →
-          </button>
-        </div>
-      </section>
+        <!-- =======================================================
+             ROOM 2: STAGE 2 (6 POUNAMU OPTIONS + MATH RECOVERY)
+        ======================================================== -->
+        <section id="stage-2" class="stage">
+          <div>
+            <h2>Stage 2: Sacred Taonga Symbol Analysis</h2>
+            
+            <div class="briefing-box">
+              <div class="briefing-title">Tactical Briefing Directive</div>
+              Inspect the 6 traditional pounamu necklaces below. Select the sacred taonga symbol that represents the eternal bond and flow of the waterways. Identifying Option 5 unlocks the secret override term needed to pass security control. You have 3 initial selection attempts before system lockout.
+            </div>
 
-      <!-- =======================================================
-           STAGE 1: ROOM 1 - TACTICAL IDENTIFICATION
-      ======================================================== -->
-      <section id="stage-1" class="stage-block hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold text-[#ffcc00] mb-1 uppercase">Room 1: Intelligence Analysis</h2>
-          <p class="text-slate-300 text-sm">Review tactical updates and select the verified entity report to proceed.</p>
-        </div>
+            <!-- ATTEMPT COUNTER DISPLAY -->
+            <div class="attempt-tracker-box">
+              <span style="color: var(--cd-yellow); font-weight: bold;">SECURITY ATTEMPTS REMAINING:</span>
+              <span id="r2-attempts-count" style="font-size: 1.1rem; font-weight: bold; color: var(--cd-green);">3 / 3</span>
+            </div>
 
-        <!-- Tactical Briefing Box -->
-        <div class="bg-[#12161a] border-l-4 border-[#ffcc00] border-t border-r border-b border-[#333d47] p-4 rounded text-sm space-y-2">
-          <h3 class="text-[#ffcc00] font-bold text-xs uppercase tracking-wider">TACTICAL BRIEFING DIRECTIVE</h3>
-          <p class="text-slate-200 leading-relaxed">
-            Emergency sensors confirm the creature has taken temporary refuge in Parnell Lagoon. According to sightings the animal in the Tāmaki river has scaly skin like a reptile rather than fish scales. Might be an invasive species coming in and the floods are coincidental. Some witnesses say that the animal had a lot of limbs trailing behind it when it moved and there are cases of large animals of these species, however, they are salt water creatures so they wouldn't be able to stay long. Ancient myths that used to live in waterways, some of the locals believe it could be one of them and would explain the link between the flooding and the appearance of the animal.
-          </p>
-        </div>
+            <!-- 6 POUNAMU TAONGA OPTION CARDS -->
+            <div class="taonga-grid" id="taonga-grid">
+              
+              <!-- Option 1 -->
+              <div class="taonga-card" id="taonga-card-1" onclick="selectTaongaOption(1)">
+                <div class="taonga-img-frame">
+                  <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80" alt="Koru Pounamu" />
+                </div>
+                <div class="taonga-title">Option 1: Koru (Spiral)</div>
+                <p class="taonga-desc">Carved as an unfurling fern frond. Represents new life, renewal, growth, and personal beginnings.</p>
+              </div>
 
-        <!-- Video Feed Stage 1 -->
-        <div class="relative w-full max-w-2xl mx-auto aspect-video bg-black rounded-lg border-2 border-[#333d47] overflow-hidden shadow-lg flex items-center justify-center">
-          <video controls class="w-full h-full object-contain">
-            <source src="./River-sighting-video.mp4" type="video/mp4">
-            <source src="River-sighting-video.mp4" type="video/mp4">
-            <p class="text-slate-400 text-sm p-4 text-center">Video Feed Offline: River Sighting Video.</p>
-          </video>
-        </div>
+              <!-- Option 2 -->
+              <div class="taonga-card" id="taonga-card-2" onclick="selectTaongaOption(2)">
+                <div class="taonga-img-frame">
+                  <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80" alt="Hei Matau Pounamu" />
+                </div>
+                <div class="taonga-title">Option 2: Hei Matau (Fish Hook)</div>
+                <p class="taonga-desc">Stylized fish hook design. Symbolizes strength, prosperity, and safe passage across waterways.</p>
+              </div>
 
-        <!-- Paragraph Options -->
-        <div class="space-y-3">
-          <h3 class="text-xs font-mono font-bold text-[#ffcc00] uppercase tracking-wider">SELECT TACTICAL ASSESSMENT:</h3>
+              <!-- Option 3 -->
+              <div class="taonga-card" id="taonga-card-3" onclick="selectTaongaOption(3)">
+                <div class="taonga-img-frame">
+                  <img src="https://images.unsplash.com/photo-1611591475178-53e7f4139943?w=500&q=80" alt="Hei Toki Pounamu" />
+                </div>
+                <div class="taonga-title">Option 3: Hei Toki (Adze Blade)</div>
+                <p class="taonga-desc">Carved in the shape of a traditional adze tool. Represents strength, courage, determination, and leadership.</p>
+              </div>
 
-          <!-- Option 1 -->
-          <button type="button" id="r1-opt-1" onclick="checkRoom1Option(1)" class="para-opt-btn">
-            <span class="font-bold text-base text-white">Option A: Ureia</span>
-            <span class="text-xs text-slate-300 font-normal leading-normal">
-              <strong>Appearance:</strong> A majestic sea creature, often depicted in tribal carvings as a large lizard or sea monster.<br>
-              <strong>Location:</strong> The Hauraki Gulf and the Hauraki/Pūponga waters near the Manukau Harbour entrance.<br>
-              <strong>Background:</strong> Ureia was a celebrated guardian taniwha associated with the fertility and prestige of the Hauraki people. He was known to guide canoes, clear safe passage through dangerous reef channels, and interact peacefully with local tribes.
-            </span>
-          </button>
+              <!-- Option 4 -->
+              <div class="taonga-card" id="taonga-card-4" onclick="selectTaongaOption(4)">
+                <div class="taonga-img-frame">
+                  <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80" alt="Roimata Pounamu" />
+                </div>
+                <div class="taonga-title">Option 4: Roimata (Teardrop)</div>
+                <p class="taonga-desc">Smooth teardrop form. Known as the comfort stone, symbolizing empathy, healing, and shared connection.</p>
+              </div>
 
-          <!-- Option 2 -->
-          <button type="button" id="r1-opt-2" onclick="checkRoom1Option(2)" class="para-opt-btn">
-            <span class="font-bold text-base text-white">Option B: Kaiwhare</span>
-            <span class="text-xs text-slate-300 font-normal leading-normal">
-              <strong>Appearance:</strong> Manifests as a massive, whale-sized sea creature or giant stingray.<br>
-              <strong>Location:</strong> The mouth and waters of the Manukau Harbour, as well as an underwater cavern south of Piha.<br>
-              <strong>Background:</strong> Kaiwhare originally served as a guardian who helped bring the ancestor Hape across the ocean. Over time, however, Kaiwhare grew fierce and began attacking local fishermen and capsizing waka before being tamed by chief Tāmure.
-            </span>
-          </button>
+              <!-- Option 5 (CORRECT TARGET) -->
+              <div class="taonga-card" id="taonga-card-5" onclick="selectTaongaOption(5)">
+                <div class="taonga-img-frame">
+                  <img src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=500&q=80" alt="Pikorua Pounamu" />
+                </div>
+                <div class="taonga-title">Option 5: Pikorua (Twist)</div>
+                <p class="taonga-desc">Intertwined figure-eight design. Symbolizes the eternal bond of two paths meeting, unity, and everlasting loyalty.</p>
+              </div>
 
-          <!-- Option 3 (CORRECT) -->
-          <button type="button" id="r1-opt-3" onclick="checkRoom1Option(3)" class="para-opt-btn">
-            <span class="font-bold text-base text-white">Option C: Te Moko-ika-a-hiku-waru</span>
-            <span class="text-xs text-slate-300 font-normal leading-normal">
-              <strong>Appearance:</strong> A grand, sea-dwelling lizard-fish endowed with eight distinct tails/limbs trailing behind it.<br>
-              <strong>Location:</strong> Te Wai-o-Taiki and the surrounding Tāmaki River waterways.<br>
-              <strong>Background:</strong> Te Moko-ika-a-hiku-waru was a protective kaitiaki (guardian) who accompanied the historic Tainui waka on its journey to Aotearoa, remaining in local waters to safeguard surrounding bays and inland waterways.
-            </span>
-          </button>
+              <!-- Option 6 -->
+              <div class="taonga-card" id="taonga-card-6" onclick="selectTaongaOption(6)">
+                <div class="taonga-img-frame">
+                  <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?w=500&q=80" alt="Manaia Pounamu" />
+                </div>
+                <div class="taonga-title">Option 6: Manaia (Guardian)</div>
+                <p class="taonga-desc">Spiritual creature form with bird-like head. Acts as a kaitiaki (guardian) protecting sky, earth, and ocean.</p>
+              </div>
 
-          <!-- Option 4 -->
-          <button type="button" id="r1-opt-4" onclick="checkRoom1Option(4)" class="para-opt-btn">
-            <span class="font-bold text-base text-white">Option D: Horotiu</span>
-            <span class="text-xs text-slate-300 font-normal leading-normal">
-              <strong>Appearance:</strong> A subterranean water spirit, often described as an aquatic serpent or giant lizard.<br>
-              <strong>Location:</strong> The Waihorotiu Stream beneath modern Queen Street in downtown Auckland.<br>
-              <strong>Background:</strong> Horotiu is the ancient guardian spirit of the central valley stream feeding into Waitematā Harbour, associated with subterranean urban water channels.
-            </span>
-          </button>
-        </div>
+            </div>
 
-        <div id="r1-feedback" class="hidden p-4 rounded text-sm font-mono border"></div>
+            <!-- MATH CALIBRATION RECOVERY MINIGAME -->
+            <div id="math-panel" class="math-panel">
+              <div style="color: var(--cd-orange); font-weight: bold; letter-spacing: 1px; font-size: 0.95rem;">
+                ⚠ LOCKOUT ACTIVE: BUNKER RECALIBRATION REQUIRED
+              </div>
+              <p style="margin: 0; font-size: 0.85rem;">Solve 5 math calibration equations to reset security controls and earn 3 reserve attempts.</p>
+              
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="math-progress-text" style="color: var(--cd-yellow); font-size: 0.85rem; font-weight: bold;">SOLVED: 0 / 5</span>
+              </div>
 
-        <div id="r1-next-action" class="hidden justify-end pt-4 border-t border-[#333d47]">
-          <button type="button" onclick="goToStage(2)" class="action-btn !border-[#00ff66]">
-            ENTER ROOM 2: CONTROL CENTRE →
-          </button>
-        </div>
-      </section>
+              <div class="math-q-box" id="math-question">Question 1: 14 + 18 = ?</div>
+              
+              <div class="input-group">
+                <input type="number" id="math-answer-input" class="text-input" placeholder="Enter answer..." />
+                <button class="btn" type="button" onclick="submitMathAnswer()">CALIBRATE</button>
+              </div>
+              <div id="math-feedback" style="font-size: 0.85rem; color: var(--cd-orange);"></div>
+            </div>
 
-      <!-- =======================================================
-           STAGE 2: ROOM 2 - MAP ANALYSIS & SYMBOL OVERRIDE
-      ======================================================== -->
-      <section id="stage-2" class="stage-block hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold text-[#ffcc00] mb-1 uppercase">Room 2: Estuarine Chart Analysis</h2>
-          <p class="text-slate-300 text-sm">Analyze the chart, locate the traditional symbol, and submit its name.</p>
-        </div>
-
-        <div class="bg-[#12161a] border-l-4 border-[#ffcc00] border-t border-r border-b border-[#333d47] p-4 rounded text-sm space-y-1">
-          <h3 class="text-[#ffcc00] font-bold text-xs uppercase tracking-wider">TACTICAL BRIEFING DIRECTIVE</h3>
-          <p class="text-slate-200">
-            Use the interactive chart viewer below. Zoom in and drag across the chart map to locate the embedded traditional Maori symbol representing eternal flow and connection. Enter its exact name below to bypass security override locks.
-          </p>
-        </div>
-
-        <!-- Zoomable Viewer Container -->
-        <div class="zoom-container">
-          <div class="zoom-viewport" id="zoom-viewport">
-            <img id="zoom-image" class="zoom-image" src="./old-pa-maps.jpg" alt="Estuarine Map Evidence" />
+            <!-- CODE OVERRIDE INPUT BOX -->
+            <div class="answer-box">
+              <label for="room2-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
+                Enter Security Override Code:
+              </label>
+              <div class="input-group">
+                <input type="text" id="room2-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" disabled />
+                <button class="btn" id="r2-submit-btn" type="button" onclick="checkRoom2Answer()" disabled>SUBMIT CODE</button>
+              </div>
+              <div id="r2-feedback" class="feedback-alert"></div>
+            </div>
           </div>
-          <div class="absolute bottom-3 right-3 flex gap-2 z-10">
-            <button type="button" onclick="zoomIn()" class="px-3 py-1.5 text-xs font-mono">[ + ZOOM ]</button>
-            <button type="button" onclick="zoomOut()" class="px-3 py-1.5 text-xs font-mono">[ - ZOOM ]</button>
-            <button type="button" onclick="resetZoom()" class="px-3 py-1.5 text-xs font-mono">[ ↺ RESET ]</button>
+
+          <div class="action-zone" id="r2-next-action" style="display: none;">
+            <button class="btn btn-danger" type="button" onclick="nextStage(3)">ENTER ROOM 3: COMMUNICATIONS →</button>
           </div>
-        </div>
+        </section>
 
-        <!-- Override Input Field -->
-        <div class="bg-[#12161a] border border-[#333d47] p-4 rounded-lg space-y-3">
-          <label for="room2-answer" class="block text-xs font-mono font-bold text-[#ffcc00] uppercase tracking-wider">
-            ENTER TRADITIONAL SYMBOL NAME:
-          </label>
-          <div class="flex flex-col sm:flex-row gap-3">
-            <input type="text" id="room2-answer" placeholder="Type symbol name here..." class="flex-1 bg-black border-2 border-[#333d47] rounded px-4 py-2 text-white font-mono text-base focus:outline-none focus:border-[#ffcc00]" />
-            <button type="button" onclick="checkRoom2Answer()" class="action-btn">SUBMIT CODE</button>
+        <!-- =======================================================
+             ROOM 3: STAGE 3
+        ======================================================== -->
+        <section id="stage-3" class="stage">
+          <div>
+            <h2>Stage 3: Communications Relay</h2>
+            <p>[PLACEHOLDER: Add Stage 3 puzzle/code here]</p>
           </div>
-          <div id="r2-feedback" class="hidden p-3 rounded text-sm font-mono border"></div>
-        </div>
 
-        <div id="r2-next-action" class="hidden justify-end pt-4 border-t border-[#333d47]">
-          <button type="button" onclick="goToStage(3)" class="action-btn !border-[#00ff66]">
-            ENTER ROOM 3: RECTIFICATION BAY →
-          </button>
-        </div>
-      </section>
+          <div class="action-zone">
+            <button class="btn" type="button" onclick="nextStage(4)">TRANSMIT SIGNAL (STAGE 4) →</button>
+          </div>
+        </section>
 
-      <!-- =======================================================
-           STAGES 3, 4, 5 (PLACEHOLDERS)
-      ======================================================== -->
-      <section id="stage-3" class="stage-block hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold text-[#ffcc00] uppercase">Room 3: Rectification Bay</h2>
-          <p class="text-slate-300 text-sm mt-2">Containment diversion controls active. Relocation parameters calibrated.</p>
-        </div>
-        <div class="p-4 bg-[#12161a] border border-[#333d47] rounded font-mono text-xs text-[#00ff66]">
-          [SECTOR STATUS: CONTAINMENT DIVERSION READY]
-        </div>
-        <div class="flex justify-end pt-4 border-t border-[#333d47]">
-          <button type="button" onclick="goToStage(4)" class="action-btn">
-            ENTER ROOM 4: COMMUNICATION HUB →
-          </button>
-        </div>
-      </section>
+        <!-- =======================================================
+             ROOM 4: STAGE 4
+        ======================================================== -->
+        <section id="stage-4" class="stage">
+          <div>
+            <h2>Stage 4: Structural Integrity Monitor</h2>
+            <p>[PLACEHOLDER: Add Stage 4 puzzle/code here]</p>
+          </div>
 
-      <section id="stage-4" class="stage-block hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold text-[#ffcc00] uppercase">Room 4: Communication Hub</h2>
-          <p class="text-slate-300 text-sm mt-2">Regional emergency response frequencies synchronized.</p>
-        </div>
-        <div class="p-4 bg-[#12161a] border border-[#333d47] rounded font-mono text-xs text-[#00ff66]">
-          [SECTOR STATUS: REGIONAL BROADCAST READY]
-        </div>
-        <div class="flex justify-end pt-4 border-t border-[#333d47]">
-          <button type="button" onclick="goToStage(5)" class="action-btn">
-            ENTER ROOM 5: EVACUATION GATEWAY →
-          </button>
-        </div>
-      </section>
+          <div class="action-zone">
+            <button class="btn" type="button" onclick="nextStage(5)">STABILIZE SECTOR (STAGE 5) →</button>
+          </div>
+        </section>
 
-      <section id="stage-5" class="stage-block hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold text-[#ffcc00] uppercase">Room 5: Evacuation Gateway</h2>
-          <p class="text-slate-300 text-sm mt-2">Final system override prepared. Initiate hatch seal release sequence.</p>
-        </div>
-        <div class="p-4 bg-[#12161a] border border-[#333d47] rounded font-mono text-xs text-[#00ff66]">
-          [SECTOR STATUS: LOCKDOWN UNSEAL READY]
-        </div>
-        <div class="flex justify-end pt-4 border-t border-[#333d47]">
-          <button type="button" onclick="goToStage(6)" class="action-btn !border-[#00ff66]">
-            UNSEAL BUNKER HATCH →
-          </button>
-        </div>
-      </section>
+        <!-- =======================================================
+             ROOM 5: STAGE 5
+        ======================================================== -->
+        <section id="stage-5" class="stage">
+          <div>
+            <h2>Stage 5: Air Lock Unseal Sequence</h2>
+            <p>[PLACEHOLDER: Add Stage 5 puzzle/code here]</p>
+          </div>
 
-      <!-- =======================================================
-           STAGE 6: CONCLUSION
-      ======================================================== -->
-      <section id="stage-6" class="stage-block hidden text-center space-y-6 py-6">
-        <div class="w-16 h-16 bg-[#00ff66]/10 border-2 border-[#00ff66] rounded-full flex items-center justify-center mx-auto text-[#00ff66] text-3xl font-bold">
-          ✓
-        </div>
-        <h2 class="text-3xl font-bold text-white uppercase">Operation Complete</h2>
-        <p class="text-slate-300 max-w-xl mx-auto leading-relaxed text-sm">
-          You have successfully identified <strong>Te Moko-ika-a-hiku-waru</strong>, bypassed security locks, diverted flood hazards, and safely unsealed Tāmaki Emergency Bunker #07.
-        </p>
-        <div class="pt-4">
-          <button type="button" onclick="goToStage(0)" class="action-btn">
-            ↺ REBOOT SYSTEM PROTOCOL
-          </button>
-        </div>
-      </section>
+          <div class="action-zone">
+            <button class="btn btn-danger" type="button" onclick="nextStage(6)">UNSEAL BUNKER HATCH →</button>
+          </div>
+        </section>
 
+        <!-- =======================================================
+             CONCLUSION PAGE (STAGE 6)
+        ======================================================== -->
+        <section id="stage-6" class="stage">
+          <div>
+            <h1 style="color: var(--cd-green);">Bunker Unsealed!</h1>
+            <p><strong>SYSTEM OVERRIDE COMPLETE.</strong></p>
+            <p>The blast doors have been retracted and environmental air locks are fully operational. Surface evacuation route is now clear.</p>
+            <p>Great work, Civil Defence Response Team!</p>
+          </div>
+
+          <div class="action-zone">
+            <button class="btn" type="button" onclick="nextStage(0)">↺ REBOOT SYSTEM</button>
+          </div>
+        </section>
+
+      </div>
     </div>
   </main>
 
-  <!-- FOOTER TRACKER -->
-  <footer class="bg-[#12161a] border-t border-[#333d47] p-4 sticky bottom-0 z-40">
-    <div class="max-w-3xl mx-auto flex items-center justify-between">
-      <span class="text-xs font-mono text-slate-400 uppercase">OPERATIONAL PROGRESS:</span>
-      <div class="flex items-center gap-2">
-        <div id="dot-1" class="step-dot" onclick="jumpToStage(1)" title="Room 1"></div>
-        <div id="dot-2" class="step-dot" onclick="jumpToStage(2)" title="Room 2"></div>
-        <div id="dot-3" class="step-dot" onclick="jumpToStage(3)" title="Room 3"></div>
-        <div id="dot-4" class="step-dot" onclick="jumpToStage(4)" title="Room 4"></div>
-        <div id="dot-5" class="step-dot" onclick="jumpToStage(5)" title="Room 5"></div>
-      </div>
+  <!-- FOOTER TRACKER WITH CLICKABLE DOTS -->
+  <footer>
+    <div>OPERATIONAL PROGRESS</div>
+    <div class="progress-tracker">
+      <div id="dot-1" class="step-dot" onclick="jumpToStage(1)" title="Room 1: Intelligence"></div>
+      <div id="dot-2" class="step-dot" onclick="jumpToStage(2)" title="Room 2: Sacred Taonga"></div>
+      <div id="dot-3" class="step-dot" onclick="jumpToStage(3)" title="Room 3: Communications"></div>
+      <div id="dot-4" class="step-dot" onclick="jumpToStage(4)" title="Room 4: Structure"></div>
+      <div id="dot-5" class="step-dot" onclick="jumpToStage(5)" title="Room 5: Air Lock"></div>
     </div>
   </footer>
 
-  <!-- SYSTEM INTERACTION SCRIPTS -->
+  <!-- ENGINE NAVIGATION & PUZZLE SCRIPT -->
   <script>
     let currentStage = 0;
     let maxUnlockedStage = 0;
 
-    // Stage Navigation Handler
-    function goToStage(stageNum) {
-      // Hide all stages
-      for (let i = 0; i <= 6; i++) {
-        const stageEl = document.getElementById(`stage-${i}`);
-        if (stageEl) {
-          stageEl.classList.add('hidden');
-        }
+    // Room 1 Validation Logic
+    function checkRoom1Option(optionIndex) {
+      const buttons = document.querySelectorAll('.para-opt-btn');
+      const fb = document.getElementById('r1-feedback');
+      const nextAction = document.getElementById('r1-next-action');
+
+      buttons.forEach(btn => {
+        btn.style.borderColor = 'var(--cd-border)';
+      });
+
+      if (optionIndex === 3) {
+        document.getElementById('opt-btn-3').style.borderColor = 'var(--cd-green)';
+        fb.className = 'feedback-alert success';
+        fb.innerText = '✓ Correct! Te Moko-ika-a-hiku-waru identified as the guardian spirit of Te Wai-o-Taiki/Tāmaki River. Room 2 access granted.';
+        nextAction.style.display = 'flex';
+        updateUnlockedStage(2);
+      } else {
+        document.getElementById(`opt-btn-${optionIndex}`).style.borderColor = 'var(--cd-orange)';
+        fb.className = 'feedback-alert error';
+        fb.innerText = '✖ Incorrect tactical assessment. Re-read the broadcast update and select the correct entity report.';
+        nextAction.style.display = 'none';
+      }
+    }
+
+    // =========================================================
+    // ROOM 2: 6 TAONGA OPTIONS + ATTEMPT LOCKOUT + MATH RECOVERY
+    // =========================================================
+    let r2AttemptsLeft = 3;
+    let r2IsLockedOut = false;
+
+    // Math Minigame Variables
+    let mathQuestionsSolved = 0;
+    let currentMathAnswer = 0;
+
+    const mathBank = [
+      { q: "12 + 15 = ?", a: 27 },
+      { q: "45 - 19 = ?", a: 26 },
+      { q: "7 × 6 = ?", a: 42 },
+      { q: "64 ÷ 8 = ?", a: 8 },
+      { q: "35 + 27 = ?", a: 62 },
+      { q: "81 ÷ 9 = ?", a: 9 },
+      { q: "14 × 3 = ?", a: 42 },
+      { q: "100 - 37 = ?", a: 63 }
+    ];
+
+    function selectTaongaOption(optNum) {
+      if (r2IsLockedOut) return;
+
+      const fb = document.getElementById('r2-feedback');
+      const input = document.getElementById('room2-answer');
+      const submitBtn = document.getElementById('r2-submit-btn');
+
+      // Highlight selected card
+      for (let i = 1; i <= 6; i++) {
+        const card = document.getElementById(`taonga-card-${i}`);
+        if (card) card.classList.remove('selected');
       }
 
-      // Unhide targeted stage
-      const targetStage = document.getElementById(`stage-${stageNum}`);
-      if (targetStage) {
-        targetStage.classList.remove('hidden');
-        currentStage = stageNum;
-        if (stageNum > maxUnlockedStage) {
-          maxUnlockedStage = stageNum;
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      const selectedCard = document.getElementById(`taonga-card-${optNum}`);
+      if (selectedCard) selectedCard.classList.add('selected');
 
-      // Update stage indicator label
-      const stageLabel = document.getElementById('stage-id-text');
-      if (stageLabel) {
-        if (stageNum === 0) stageLabel.innerText = 'SYS_ID: INTRO_PAGE';
-        else if (stageNum === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
-        else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${stageNum}`;
-      }
+      // Option 5 is the Correct Pikorua Twist
+      if (optNum === 5) {
+        fb.className = 'feedback-alert success';
+        fb.innerText = '✓ TAONGA VERIFIED: Pikorua (Option 5) selected! The ancient symbol represents unity across waterways. Secret term unlocked: "taonga". Click SUBMIT CODE below.';
+        input.value = 'taonga';
+        input.disabled = false;
+        submitBtn.disabled = false;
+      } else {
+        r2AttemptsLeft--;
+        updateAttemptDisplay();
 
-      // Update Header Status Tag
-      const statusTag = document.getElementById('status-tag');
-      if (statusTag) {
-        if (stageNum === 6) {
-          statusTag.innerText = 'STATUS: UNLOCKED';
-          statusTag.className = 'px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#00ff66] rounded';
+        if (r2AttemptsLeft > 0) {
+          fb.className = 'feedback-alert error';
+          fb.innerText = `✖ INCORRECT SYMBOL: Option ${optNum} is not the Pikorua twist. ${r2AttemptsLeft} attempt(s) remaining before security lockout.`;
+          input.value = '';
+          input.disabled = true;
+          submitBtn.disabled = true;
         } else {
-          statusTag.innerText = 'STATUS: LOCKDOWN';
-          statusTag.className = 'px-2.5 py-1 bg-[#1e242b] border border-[#333d47] text-[#ff6600] rounded';
+          // Trigger Lockout
+          triggerRoom2Lockout();
         }
       }
+    }
 
-      // Refresh Footer Dots
+    function updateAttemptDisplay() {
+      const display = document.getElementById('r2-attempts-count');
+      if (display) {
+        display.innerText = `${r2AttemptsLeft} / 3`;
+        if (r2AttemptsLeft === 1) display.style.color = 'var(--cd-orange)';
+        else if (r2AttemptsLeft === 0) display.style.color = '#ff3333';
+        else display.style.color = 'var(--cd-green)';
+      }
+    }
+
+    function triggerRoom2Lockout() {
+      r2IsLockedOut = true;
+      const fb = document.getElementById('r2-feedback');
+      const mathPanel = document.getElementById('math-panel');
+      const input = document.getElementById('room2-answer');
+      const submitBtn = document.getElementById('r2-submit-btn');
+
+      fb.className = 'feedback-alert error';
+      fb.innerText = '✖ SECURITY LOCKOUT ACTIVATED: Maximum selection attempts exceeded! Solve 5 bunker math equations below to reset security controls.';
+
+      input.value = '';
+      input.disabled = true;
+      submitBtn.disabled = true;
+
+      // Disable card selections
+      for (let i = 1; i <= 6; i++) {
+        const card = document.getElementById(`taonga-card-${i}`);
+        if (card) card.classList.add('disabled');
+      }
+
+      // Activate Math Minigame Panel
+      mathQuestionsSolved = 0;
+      if (mathPanel) mathPanel.classList.add('active');
+      loadNextMathQuestion();
+    }
+
+    function loadNextMathQuestion() {
+      const qBox = document.getElementById('math-question');
+      const progressText = document.getElementById('math-progress-text');
+      const feedback = document.getElementById('math-feedback');
+      const input = document.getElementById('math-answer-input');
+
+      if (feedback) feedback.innerText = '';
+      if (input) input.value = '';
+
+      if (progressText) progressText.innerText = `SOLVED: ${mathQuestionsSolved} / 5`;
+
+      if (mathQuestionsSolved >= 5) {
+        // Complete Math Minigame & Grant 3 Reserve Attempts
+        completeMathRecovery();
+        return;
+      }
+
+      // Select random math problem from bank
+      const randomIndex = Math.floor(Math.random() * mathBank.length);
+      const qObj = mathBank[randomIndex];
+
+      if (qBox) qBox.innerText = `Question ${mathQuestionsSolved + 1}: ${qObj.q}`;
+      currentMathAnswer = qObj.a;
+    }
+
+    function submitMathAnswer() {
+      const input = document.getElementById('math-answer-input');
+      const feedback = document.getElementById('math-feedback');
+      const val = parseInt(input.value.trim(), 10);
+
+      if (val === currentMathAnswer) {
+        mathQuestionsSolved++;
+        loadNextMathQuestion();
+      } else {
+        if (feedback) feedback.innerText = '✖ Calibration error: Incorrect answer. Try again!';
+      }
+    }
+
+    function completeMathRecovery() {
+      const mathPanel = document.getElementById('math-panel');
+      const fb = document.getElementById('r2-feedback');
+
+      if (mathPanel) mathPanel.classList.remove('active');
+
+      r2IsLockedOut = false;
+      r2AttemptsLeft = 3; // Grant 3 Reserve Choices
+      updateAttemptDisplay();
+
+      // Enable taonga card selections
+      for (let i = 1; i <= 6; i++) {
+        const card = document.getElementById(`taonga-card-${i}`);
+        if (card) card.classList.remove('disabled');
+      }
+
+      fb.className = 'feedback-alert success';
+      fb.innerText = '✓ RECALIBRATION COMPLETE: Bunker systems stabilized! 3 reserve choices granted. Re-examine the taonga descriptions and select Option 5.';
+    }
+
+    // ROOM 2 SENTENCE CHECK: "taonga"
+    function checkRoom2Answer() {
+      const input = document.getElementById('room2-answer').value.trim();
+      const fb = document.getElementById('r2-feedback');
+      const nextAction = document.getElementById('r2-next-action');
+
+      // LINE OF CODE CHECKING "taonga"
+      if (input.toLowerCase() === 'taonga') {
+        fb.className = 'feedback-alert success';
+        fb.innerText = '✓ ACCESS GRANTED: "Taonga" override code accepted! Pumping stations recalibrated. Proceed to Stage 3.';
+        nextAction.style.display = 'flex';
+        updateUnlockedStage(3);
+      } else {
+        fb.className = 'feedback-alert error';
+        fb.innerText = '✖ ACCESS DENIED: Invalid override code. Select Option 5 above to reveal the correct term.';
+        nextAction.style.display = 'none';
+      }
+    }
+
+    // Updates highest unlocked stage index
+    function updateUnlockedStage(stageNum) {
+      if (stageNum > maxUnlockedStage) {
+        maxUnlockedStage = stageNum;
+      }
+    }
+
+    // Interactive Dot Navigation
+    function jumpToStage(targetStage) {
+      if (targetStage <= maxUnlockedStage) {
+        nextStage(targetStage);
+      }
+    }
+
+    // Stage Navigation Engine
+    function nextStage(stageNumber) {
+      const currentElement = document.getElementById(`stage-${currentStage}`);
+      if (currentElement) {
+        currentElement.classList.remove('active');
+      }
+
+      currentStage = stageNumber;
+      updateUnlockedStage(currentStage);
+
+      const activeStage = document.getElementById(`stage-${currentStage}`);
+      if (activeStage) {
+        activeStage.classList.add('active');
+      }
+
+      const stageLabel = document.getElementById('stage-id');
+      if (stageLabel) {
+        if (currentStage === 0) stageLabel.innerText = 'SYS_ID: INTRO_PAGE';
+        else if (currentStage === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
+        else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${currentStage}`;
+      }
+
+      // Refresh footer dots state
       for (let i = 1; i <= 5; i++) {
         const dot = document.getElementById(`dot-${i}`);
         if (dot) {
-          if (i === currentStage) {
-            dot.className = 'step-dot current';
-          } else if (i <= maxUnlockedStage) {
+          if (i < currentStage || i < maxUnlockedStage) {
             dot.className = 'step-dot completed';
+          } else if (i === currentStage) {
+            dot.className = 'step-dot current';
           } else {
             dot.className = 'step-dot';
           }
         }
       }
-    }
 
-    // Interactive Dot Jump Helper
-    function jumpToStage(num) {
-      if (num <= maxUnlockedStage) {
-        goToStage(num);
+      if (currentStage === 6) {
+        document.getElementById('system-status').className = 'indicator';
+        document.getElementById('status-text').innerText = 'SYSTEM SECURE';
       }
     }
-
-    // Room 1 Answer Validation
-    function checkRoom1Option(optionIndex) {
-      for (let i = 1; i <= 4; i++) {
-        const btn = document.getElementById(`r1-opt-${i}`);
-        if (btn) {
-          btn.classList.remove('correct', 'incorrect');
-        }
-      }
-
-      const fb = document.getElementById('r1-feedback');
-      const nextAction = document.getElementById('r1-next-action');
-
-      if (optionIndex === 3) {
-        const correctBtn = document.getElementById('r1-opt-3');
-        if (correctBtn) correctBtn.classList.add('correct');
-
-        fb.className = 'p-4 rounded text-sm font-mono border bg-[#052e16] border-[#00ff66] text-[#00ff66] block';
-        fb.innerHTML = '<strong>✓ IDENTIFICATION CONFIRMED:</strong> Entity matched to <em>Te Moko-ika-a-hiku-waru</em>. Room 2 access granted.';
-
-        if (nextAction) {
-          nextAction.classList.remove('hidden');
-          nextAction.classList.add('flex');
-        }
-        if (maxUnlockedStage < 2) maxUnlockedStage = 2;
-      } else {
-        const wrongBtn = document.getElementById(`r1-opt-${optionIndex}`);
-        if (wrongBtn) wrongBtn.classList.add('incorrect');
-
-        fb.className = 'p-4 rounded text-sm font-mono border bg-[#450a0a] border-[#ff6600] text-[#ff6600] block';
-        fb.innerHTML = '<strong>✖ INSUFFICIENT MATCH:</strong> Selected entity profile does not match multi-limbed reptilian reports. Review briefing notes and retry.';
-
-        if (nextAction) {
-          nextAction.classList.add('hidden');
-          nextAction.classList.remove('flex');
-        }
-      }
-    }
-
-    // Room 2 Map Zoom & Drag Handling with Clamped Boundaries
-    let zoomScale = 1;
-    let panX = 0;
-    let panY = 0;
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-
-    const viewport = document.getElementById('zoom-viewport');
-    const img = document.getElementById('zoom-image');
-
-    function clampBoundaries() {
-      if (!viewport) return;
-      const containerWidth = viewport.clientWidth;
-      const containerHeight = viewport.clientHeight;
-
-      const scaledWidth = containerWidth * zoomScale;
-      const scaledHeight = containerHeight * zoomScale;
-
-      const minX = containerWidth - scaledWidth;
-      const minY = containerHeight - scaledHeight;
-
-      panX = Math.min(0, Math.max(minX, panX));
-      panY = Math.min(0, Math.max(minY, panY));
-    }
-
-    function updateTransform() {
-      clampBoundaries();
-      if (img) {
-        img.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
-      }
-    }
-
-    function zoomIn() {
-      zoomScale = Math.min(zoomScale + 0.4, 3.5);
-      updateTransform();
-    }
-
-    function zoomOut() {
-      zoomScale = Math.max(zoomScale - 0.4, 1);
-      if (zoomScale === 1) {
-        panX = 0;
-        panY = 0;
-      }
-      updateTransform();
-    }
-
-    function resetZoom() {
-      zoomScale = 1;
-      panX = 0;
-      panY = 0;
-      updateTransform();
-    }
-
-    if (viewport) {
-      viewport.addEventListener('mousedown', (e) => {
-        if (zoomScale <= 1) return;
-        isDragging = true;
-        startX = e.clientX - panX;
-        startY = e.clientY - panY;
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        panX = e.clientX - startX;
-        panY = e.clientY - startY;
-        updateTransform();
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      viewport.addEventListener('touchstart', (e) => {
-        if (zoomScale <= 1) return;
-        if (e.touches.length === 1) {
-          isDragging = true;
-          startX = e.touches[0].clientX - panX;
-          startY = e.touches[0].clientY - panY;
-        }
-      });
-
-      window.addEventListener('touchmove', (e) => {
-        if (!isDragging || e.touches.length !== 1) return;
-        panX = e.touches[0].clientX - startX;
-        panY = e.touches[0].clientY - startY;
-        updateTransform();
-      });
-
-      window.addEventListener('touchend', () => { isDragging = false; });
-    }
-
-    // Room 2 Answer Check
-    function checkRoom2Answer() {
-      const inputEl = document.getElementById('room2-answer');
-      const val = inputEl ? inputEl.value.trim().toLowerCase() : '';
-      const fb = document.getElementById('r2-feedback');
-      const nextAction = document.getElementById('r2-next-action');
-
-      if (val === 'pikorua') {
-        fb.className = 'p-3 rounded text-sm font-mono border bg-[#052e16] border-[#00ff66] text-[#00ff66] block';
-        fb.innerHTML = '<strong>✓ OVERRIDE ACCEPTED:</strong> Pikorua symbol confirmed. Access to Rectification Bay unlocked.';
-        if (nextAction) {
-          nextAction.classList.remove('hidden');
-          nextAction.classList.add('flex');
-        }
-        if (maxUnlockedStage < 3) maxUnlockedStage = 3;
-      } else {
-        fb.className = 'p-3 rounded text-sm font-mono border bg-[#450a0a] border-[#ff6600] text-[#ff6600] block';
-        fb.innerHTML = '<strong>✖ OVERRIDE REJECTED:</strong> Incorrect symbol code. Re-examine the chart and try again.';
-        if (nextAction) {
-          nextAction.classList.add('hidden');
-          nextAction.classList.remove('flex');
-        }
-      }
-    }
-
-    // Ensure Stage 0 displays on initial load
-    window.onload = function() {
-      goToStage(0);
-    };
   </script>
 </body>
 </html>
