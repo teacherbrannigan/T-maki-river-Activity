@@ -83,7 +83,7 @@
     }
 
     .indicator {
-      width: 10px;
+      width: 100px;
       height: 10px;
       border-radius: 50%;
       background-color: var(--cd-green);
@@ -285,7 +285,70 @@
       white-space: pre-line;
     }
 
-    /* ROOM 2 POUNAMU TAONGA GRID */
+    /* ROOM 2 ZOOMABLE IMAGE CONTAINER WITH HARD EDGE BOUNDARIES */
+    .zoom-viewer-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      background-color: #000;
+      border: 2px solid var(--cd-yellow);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      touch-action: none;
+    }
+
+    .zoom-viewport {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .zoom-viewport:active {
+      cursor: grabbing;
+    }
+
+    .zoom-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform-origin: 0 0;
+      transition: transform 0.05s ease-out;
+      pointer-events: none;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .ctrl-btn {
+      background-color: #000000;
+      color: #ffffff;
+      border: 1px solid var(--cd-yellow);
+      font-family: var(--cd-font);
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .ctrl-btn:hover {
+      background-color: var(--cd-yellow);
+      color: #000;
+    }
+
+    /* ROOM 3 POUNAMU TAONGA GRID */
     .taonga-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -354,7 +417,6 @@
       margin: 0;
     }
 
-    /* ROOM 2 ATTEMPT COUNTER */
     .attempt-tracker-box {
       background-color: #0e1216;
       border: 1px solid var(--cd-border);
@@ -367,7 +429,6 @@
       font-size: 0.85rem;
     }
 
-    /* MATH RECOVERY PANEL */
     .math-panel {
       background-color: rgba(255, 102, 0, 0.1);
       border: 2px solid var(--cd-orange);
@@ -389,7 +450,7 @@
       color: var(--cd-yellow);
     }
 
-    /* ROOM 2 INPUT BOX */
+    /* INPUT BOX */
     .answer-box {
       background-color: rgba(0, 0, 0, 0.4);
       border: 1px solid var(--cd-border);
@@ -671,27 +732,65 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
         </section>
 
         <!-- =======================================================
-             ROOM 2: STAGE 2 (6 POUNAMU OPTIONS + MATH RECOVERY)
+             ROOM 2: STAGE 2 (ORIGINAL ESTUARINE PAN & ZOOM PUZZLE)
         ======================================================== -->
         <section id="stage-2" class="stage">
           <div>
-            <h2>Stage 2: Sacred Taonga Symbol Analysis</h2>
+            <h2>Stage 2: Estuarine Mapping & Symbol Analysis</h2>
+            
+            <div class="briefing-box">
+              <div class="briefing-title">Tactical Briefing Directive</div>
+              Emergency response teams have uncovered an ancient navigational chart detailing the estuarine channels. Use the interactive viewer below to zoom in and drag across the map. Locate the hidden traditional symbol that represents the eternal bond and flow of the waterways, and enter its exact traditional name ("Pikorua") to override the security lock.
+            </div>
+
+            <div class="zoom-viewer-container">
+              <div class="zoom-viewport" id="zoom-viewport">
+                <img id="zoom-image" class="zoom-image" src="./estuarine_map.jpg" alt="Estuarine Map Evidence" />
+              </div>
+              <div class="zoom-controls">
+                <button class="ctrl-btn" type="button" onclick="zoomIn()">[ + ]</button>
+                <button class="ctrl-btn" type="button" onclick="zoomOut()">[ - ]</button>
+                <button class="ctrl-btn" type="button" onclick="resetZoom()">[ ↺ RESET ]</button>
+              </div>
+            </div>
+
+            <div class="answer-box">
+              <label for="room2-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
+                Enter Hidden Symbol Override Code:
+              </label>
+              <div class="input-group">
+                <input type="text" id="room2-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" />
+                <button class="btn" type="button" onclick="checkRoom2Answer()">SUBMIT CODE</button>
+              </div>
+              <div id="r2-feedback" class="feedback-alert"></div>
+            </div>
+          </div>
+
+          <div class="action-zone" id="r2-next-action" style="display: none;">
+            <button class="btn btn-danger" type="button" onclick="nextStage(3)">ENTER ROOM 3: TAONGA SYMBOLS →</button>
+          </div>
+        </section>
+
+        <!-- =======================================================
+             ROOM 3: STAGE 3 (POUNAMU TAONGA OPTIONS + MATH RECOVERY)
+        ======================================================== -->
+        <section id="stage-3" class="stage">
+          <div>
+            <h2>Stage 3: Sacred Taonga Symbol Analysis</h2>
             
             <div class="briefing-box">
               <div class="briefing-title">Tactical Briefing Directive</div>
               Inspect the 6 traditional pounamu necklaces below. Select the sacred taonga symbol that represents the eternal bond and flow of the waterways. Identifying Option 5 unlocks the secret override term needed to pass security control. You have 3 initial selection attempts before system lockout.
             </div>
 
-            <!-- ATTEMPT COUNTER DISPLAY -->
             <div class="attempt-tracker-box">
               <span style="color: var(--cd-yellow); font-weight: bold;">SECURITY ATTEMPTS REMAINING:</span>
-              <span id="r2-attempts-count" style="font-size: 1.1rem; font-weight: bold; color: var(--cd-green);">3 / 3</span>
+              <span id="r3-attempts-count" style="font-size: 1.1rem; font-weight: bold; color: var(--cd-green);">3 / 3</span>
             </div>
 
             <!-- 6 POUNAMU TAONGA OPTION CARDS -->
             <div class="taonga-grid" id="taonga-grid">
               
-              <!-- Option 1 -->
               <div class="taonga-card" id="taonga-card-1" onclick="selectTaongaOption(1)">
                 <div class="taonga-img-frame">
                   <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80" alt="Koru Pounamu" />
@@ -700,7 +799,6 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
                 <p class="taonga-desc">Carved as an unfurling fern frond. Represents new life, renewal, growth, and personal beginnings.</p>
               </div>
 
-              <!-- Option 2 -->
               <div class="taonga-card" id="taonga-card-2" onclick="selectTaongaOption(2)">
                 <div class="taonga-img-frame">
                   <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80" alt="Hei Matau Pounamu" />
@@ -709,7 +807,6 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
                 <p class="taonga-desc">Stylized fish hook design. Symbolizes strength, prosperity, and safe passage across waterways.</p>
               </div>
 
-              <!-- Option 3 -->
               <div class="taonga-card" id="taonga-card-3" onclick="selectTaongaOption(3)">
                 <div class="taonga-img-frame">
                   <img src="https://images.unsplash.com/photo-1611591475178-53e7f4139943?w=500&q=80" alt="Hei Toki Pounamu" />
@@ -718,7 +815,6 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
                 <p class="taonga-desc">Carved in the shape of a traditional adze tool. Represents strength, courage, determination, and leadership.</p>
               </div>
 
-              <!-- Option 4 -->
               <div class="taonga-card" id="taonga-card-4" onclick="selectTaongaOption(4)">
                 <div class="taonga-img-frame">
                   <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80" alt="Roimata Pounamu" />
@@ -736,7 +832,6 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
                 <p class="taonga-desc">Intertwined figure-eight design. Symbolizes the eternal bond of two paths meeting, unity, and everlasting loyalty.</p>
               </div>
 
-              <!-- Option 6 -->
               <div class="taonga-card" id="taonga-card-6" onclick="selectTaongaOption(6)">
                 <div class="taonga-img-frame">
                   <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?w=500&q=80" alt="Manaia Pounamu" />
@@ -767,35 +862,21 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
               <div id="math-feedback" style="font-size: 0.85rem; color: var(--cd-orange);"></div>
             </div>
 
-            <!-- CODE OVERRIDE INPUT BOX -->
+            <!-- ROOM 3 INPUT BOX -->
             <div class="answer-box">
-              <label for="room2-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
+              <label for="room3-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
                 Enter Security Override Code:
               </label>
               <div class="input-group">
-                <input type="text" id="room2-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" disabled />
-                <button class="btn" id="r2-submit-btn" type="button" onclick="checkRoom2Answer()" disabled>SUBMIT CODE</button>
+                <input type="text" id="room3-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" disabled />
+                <button class="btn" id="r3-submit-btn" type="button" onclick="checkRoom3Answer()" disabled>SUBMIT CODE</button>
               </div>
-              <div id="r2-feedback" class="feedback-alert"></div>
+              <div id="r3-feedback" class="feedback-alert"></div>
             </div>
           </div>
 
-          <div class="action-zone" id="r2-next-action" style="display: none;">
-            <button class="btn btn-danger" type="button" onclick="nextStage(3)">ENTER ROOM 3: COMMUNICATIONS →</button>
-          </div>
-        </section>
-
-        <!-- =======================================================
-             ROOM 3: STAGE 3
-        ======================================================== -->
-        <section id="stage-3" class="stage">
-          <div>
-            <h2>Stage 3: Communications Relay</h2>
-            <p>[PLACEHOLDER: Add Stage 3 puzzle/code here]</p>
-          </div>
-
-          <div class="action-zone">
-            <button class="btn" type="button" onclick="nextStage(4)">TRANSMIT SIGNAL (STAGE 4) →</button>
+          <div class="action-zone" id="r3-next-action" style="display: none;">
+            <button class="btn btn-danger" type="button" onclick="nextStage(4)">ENTER ROOM 4: STRUCTURAL MONITOR →</button>
           </div>
         </section>
 
@@ -852,8 +933,8 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
     <div>OPERATIONAL PROGRESS</div>
     <div class="progress-tracker">
       <div id="dot-1" class="step-dot" onclick="jumpToStage(1)" title="Room 1: Intelligence"></div>
-      <div id="dot-2" class="step-dot" onclick="jumpToStage(2)" title="Room 2: Sacred Taonga"></div>
-      <div id="dot-3" class="step-dot" onclick="jumpToStage(3)" title="Room 3: Communications"></div>
+      <div id="dot-2" class="step-dot" onclick="jumpToStage(2)" title="Room 2: Estuarine Map"></div>
+      <div id="dot-3" class="step-dot" onclick="jumpToStage(3)" title="Room 3: Sacred Taonga"></div>
       <div id="dot-4" class="step-dot" onclick="jumpToStage(4)" title="Room 4: Structure"></div>
       <div id="dot-5" class="step-dot" onclick="jumpToStage(5)" title="Room 5: Air Lock"></div>
     </div>
@@ -889,234 +970,101 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
     }
 
     // =========================================================
-    // ROOM 2: 6 TAONGA OPTIONS + ATTEMPT LOCKOUT + MATH RECOVERY
+    // ROOM 2: ESTUARINE PAN & ZOOM PUZZLE (ANSWER: "Pikorua")
     // =========================================================
-    let r2AttemptsLeft = 3;
-    let r2IsLockedOut = false;
+    let zoomScale = 1;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
 
-    // Math Minigame Variables
-    let mathQuestionsSolved = 0;
-    let currentMathAnswer = 0;
+    const viewport = document.getElementById('zoom-viewport');
+    const img = document.getElementById('zoom-image');
 
-    const mathBank = [
-      { q: "12 + 15 = ?", a: 27 },
-      { q: "45 - 19 = ?", a: 26 },
-      { q: "7 × 6 = ?", a: 42 },
-      { q: "64 ÷ 8 = ?", a: 8 },
-      { q: "35 + 27 = ?", a: 62 },
-      { q: "81 ÷ 9 = ?", a: 9 },
-      { q: "14 × 3 = ?", a: 42 },
-      { q: "100 - 37 = ?", a: 63 }
-    ];
+    function clampBoundaries() {
+      if (!viewport) return;
+      const containerWidth = viewport.clientWidth;
+      const containerHeight = viewport.clientHeight;
 
-    function selectTaongaOption(optNum) {
-      if (r2IsLockedOut) return;
+      const scaledWidth = containerWidth * zoomScale;
+      const scaledHeight = containerHeight * zoomScale;
 
-      const fb = document.getElementById('r2-feedback');
-      const input = document.getElementById('room2-answer');
-      const submitBtn = document.getElementById('r2-submit-btn');
+      const minX = containerWidth - scaledWidth;
+      const minY = containerHeight - scaledHeight;
 
-      // Highlight selected card
-      for (let i = 1; i <= 6; i++) {
-        const card = document.getElementById(`taonga-card-${i}`);
-        if (card) card.classList.remove('selected');
+      panX = Math.min(0, Math.max(minX, panX));
+      panY = Math.min(0, Math.max(minY, panY));
+    }
+
+    function updateTransform() {
+      clampBoundaries();
+      if (img) {
+        img.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
       }
+    }
 
-      const selectedCard = document.getElementById(`taonga-card-${optNum}`);
-      if (selectedCard) selectedCard.classList.add('selected');
+    function zoomIn() {
+      zoomScale = Math.min(zoomScale + 0.4, 3.5);
+      updateTransform();
+    }
 
-      // Option 5 is the Correct Pikorua Twist
-      if (optNum === 5) {
-        fb.className = 'feedback-alert success';
-        fb.innerText = '✓ TAONGA VERIFIED: Pikorua (Option 5) selected! The ancient symbol represents unity across waterways. Secret term unlocked: "taonga". Click SUBMIT CODE below.';
-        input.value = 'taonga';
-        input.disabled = false;
-        submitBtn.disabled = false;
-      } else {
-        r2AttemptsLeft--;
-        updateAttemptDisplay();
+    function zoomOut() {
+      zoomScale = Math.max(zoomScale - 0.4, 1);
+      if (zoomScale === 1) { 
+        panX = 0; 
+        panY = 0; 
+      }
+      updateTransform();
+    }
 
-        if (r2AttemptsLeft > 0) {
-          fb.className = 'feedback-alert error';
-          fb.innerText = `✖ INCORRECT SYMBOL: Option ${optNum} is not the Pikorua twist. ${r2AttemptsLeft} attempt(s) remaining before security lockout.`;
-          input.value = '';
-          input.disabled = true;
-          submitBtn.disabled = true;
-        } else {
-          // Trigger Lockout
-          triggerRoom2Lockout();
+    function resetZoom() {
+      zoomScale = 1;
+      panX = 0;
+      panY = 0;
+      updateTransform();
+    }
+
+    if (viewport) {
+      viewport.addEventListener('mousedown', (e) => {
+        if (zoomScale <= 1) return;
+        isDragging = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        updateTransform();
+      });
+
+      window.addEventListener('mouseup', () => { 
+        isDragging = false; 
+      });
+
+      viewport.addEventListener('touchstart', (e) => {
+        if (zoomScale <= 1) return;
+        if (e.touches.length === 1) {
+          isDragging = true;
+          startX = e.touches[0].clientX - panX;
+          startY = e.touches[0].clientY - panY;
         }
-      }
+      });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        panX = e.touches[0].clientX - startX;
+        panY = e.touches[0].clientY - startY;
+        updateTransform();
+      });
+
+      window.addEventListener('touchend', () => { 
+        isDragging = false; 
+      });
     }
 
-    function updateAttemptDisplay() {
-      const display = document.getElementById('r2-attempts-count');
-      if (display) {
-        display.innerText = `${r2AttemptsLeft} / 3`;
-        if (r2AttemptsLeft === 1) display.style.color = 'var(--cd-orange)';
-        else if (r2AttemptsLeft === 0) display.style.color = '#ff3333';
-        else display.style.color = 'var(--cd-green)';
-      }
-    }
-
-    function triggerRoom2Lockout() {
-      r2IsLockedOut = true;
-      const fb = document.getElementById('r2-feedback');
-      const mathPanel = document.getElementById('math-panel');
-      const input = document.getElementById('room2-answer');
-      const submitBtn = document.getElementById('r2-submit-btn');
-
-      fb.className = 'feedback-alert error';
-      fb.innerText = '✖ SECURITY LOCKOUT ACTIVATED: Maximum selection attempts exceeded! Solve 5 bunker math equations below to reset security controls.';
-
-      input.value = '';
-      input.disabled = true;
-      submitBtn.disabled = true;
-
-      // Disable card selections
-      for (let i = 1; i <= 6; i++) {
-        const card = document.getElementById(`taonga-card-${i}`);
-        if (card) card.classList.add('disabled');
-      }
-
-      // Activate Math Minigame Panel
-      mathQuestionsSolved = 0;
-      if (mathPanel) mathPanel.classList.add('active');
-      loadNextMathQuestion();
-    }
-
-    function loadNextMathQuestion() {
-      const qBox = document.getElementById('math-question');
-      const progressText = document.getElementById('math-progress-text');
-      const feedback = document.getElementById('math-feedback');
-      const input = document.getElementById('math-answer-input');
-
-      if (feedback) feedback.innerText = '';
-      if (input) input.value = '';
-
-      if (progressText) progressText.innerText = `SOLVED: ${mathQuestionsSolved} / 5`;
-
-      if (mathQuestionsSolved >= 5) {
-        // Complete Math Minigame & Grant 3 Reserve Attempts
-        completeMathRecovery();
-        return;
-      }
-
-      // Select random math problem from bank
-      const randomIndex = Math.floor(Math.random() * mathBank.length);
-      const qObj = mathBank[randomIndex];
-
-      if (qBox) qBox.innerText = `Question ${mathQuestionsSolved + 1}: ${qObj.q}`;
-      currentMathAnswer = qObj.a;
-    }
-
-    function submitMathAnswer() {
-      const input = document.getElementById('math-answer-input');
-      const feedback = document.getElementById('math-feedback');
-      const val = parseInt(input.value.trim(), 10);
-
-      if (val === currentMathAnswer) {
-        mathQuestionsSolved++;
-        loadNextMathQuestion();
-      } else {
-        if (feedback) feedback.innerText = '✖ Calibration error: Incorrect answer. Try again!';
-      }
-    }
-
-    function completeMathRecovery() {
-      const mathPanel = document.getElementById('math-panel');
-      const fb = document.getElementById('r2-feedback');
-
-      if (mathPanel) mathPanel.classList.remove('active');
-
-      r2IsLockedOut = false;
-      r2AttemptsLeft = 3; // Grant 3 Reserve Choices
-      updateAttemptDisplay();
-
-      // Enable taonga card selections
-      for (let i = 1; i <= 6; i++) {
-        const card = document.getElementById(`taonga-card-${i}`);
-        if (card) card.classList.remove('disabled');
-      }
-
-      fb.className = 'feedback-alert success';
-      fb.innerText = '✓ RECALIBRATION COMPLETE: Bunker systems stabilized! 3 reserve choices granted. Re-examine the taonga descriptions and select Option 5.';
-    }
-
-    // ROOM 2 SENTENCE CHECK: "taonga"
     function checkRoom2Answer() {
       const input = document.getElementById('room2-answer').value.trim();
-      const fb = document.getElementById('r2-feedback');
-      const nextAction = document.getElementById('r2-next-action');
-
-      // LINE OF CODE CHECKING "taonga"
-      if (input.toLowerCase() === 'taonga') {
-        fb.className = 'feedback-alert success';
-        fb.innerText = '✓ ACCESS GRANTED: "Taonga" override code accepted! Pumping stations recalibrated. Proceed to Stage 3.';
-        nextAction.style.display = 'flex';
-        updateUnlockedStage(3);
-      } else {
-        fb.className = 'feedback-alert error';
-        fb.innerText = '✖ ACCESS DENIED: Invalid override code. Select Option 5 above to reveal the correct term.';
-        nextAction.style.display = 'none';
-      }
-    }
-
-    // Updates highest unlocked stage index
-    function updateUnlockedStage(stageNum) {
-      if (stageNum > maxUnlockedStage) {
-        maxUnlockedStage = stageNum;
-      }
-    }
-
-    // Interactive Dot Navigation
-    function jumpToStage(targetStage) {
-      if (targetStage <= maxUnlockedStage) {
-        nextStage(targetStage);
-      }
-    }
-
-    // Stage Navigation Engine
-    function nextStage(stageNumber) {
-      const currentElement = document.getElementById(`stage-${currentStage}`);
-      if (currentElement) {
-        currentElement.classList.remove('active');
-      }
-
-      currentStage = stageNumber;
-      updateUnlockedStage(currentStage);
-
-      const activeStage = document.getElementById(`stage-${currentStage}`);
-      if (activeStage) {
-        activeStage.classList.add('active');
-      }
-
-      const stageLabel = document.getElementById('stage-id');
-      if (stageLabel) {
-        if (currentStage === 0) stageLabel.innerText = 'SYS_ID: INTRO_PAGE';
-        else if (currentStage === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
-        else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${currentStage}`;
-      }
-
-      // Refresh footer dots state
-      for (let i = 1; i <= 5; i++) {
-        const dot = document.getElementById(`dot-${i}`);
-        if (dot) {
-          if (i < currentStage || i < maxUnlockedStage) {
-            dot.className = 'step-dot completed';
-          } else if (i === currentStage) {
-            dot.className = 'step-dot current';
-          } else {
-            dot.className = 'step-dot';
-          }
-        }
-      }
-
-      if (currentStage === 6) {
-        document.getElementById('system-status').className = 'indicator';
-        document.getElementById('status-text').innerText = 'SYSTEM SECURE';
-      }
-    }
-  </script>
-</body>
-</html>
+      const fb = document.getElementById('
