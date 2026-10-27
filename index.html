@@ -474,15 +474,24 @@
     }
 
     .step-dot {
-      width: 25px;
-      height: 8px;
+      width: 28px;
+      height: 10px;
       background-color: var(--cd-border);
-      border-radius: 2px;
-      transition: background-color 0.3s;
+      border-radius: 3px;
+      transition: all 0.3s ease;
     }
 
+    /* COMPLETED DOT INTERACTIVITY */
     .step-dot.completed {
       background-color: var(--cd-green);
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(0, 255, 102, 0.4);
+    }
+
+    .step-dot.completed:hover {
+      transform: scaleY(1.3);
+      background-color: #66ffa3;
+      box-shadow: 0 0 10px var(--cd-green);
     }
 
     .step-dot.current {
@@ -718,21 +727,22 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
     </div>
   </main>
 
-  <!-- FOOTER TRACKER -->
+  <!-- FOOTER TRACKER WITH CLICKABLE DOTS -->
   <footer>
     <div>OPERATIONAL PROGRESS</div>
     <div class="progress-tracker">
-      <div id="dot-1" class="step-dot"></div>
-      <div id="dot-2" class="step-dot"></div>
-      <div id="dot-3" class="step-dot"></div>
-      <div id="dot-4" class="step-dot"></div>
-      <div id="dot-5" class="step-dot"></div>
+      <div id="dot-1" class="step-dot" onclick="jumpToStage(1)" title="Room 1: Intelligence"></div>
+      <div id="dot-2" class="step-dot" onclick="jumpToStage(2)" title="Room 2: Estuarine Map"></div>
+      <div id="dot-3" class="step-dot" onclick="jumpToStage(3)" title="Room 3: Communications"></div>
+      <div id="dot-4" class="step-dot" onclick="jumpToStage(4)" title="Room 4: Structure"></div>
+      <div id="dot-5" class="step-dot" onclick="jumpToStage(5)" title="Room 5: Air Lock"></div>
     </div>
   </footer>
 
   <!-- ENGINE NAVIGATION & PUZZLE SCRIPT -->
   <script>
     let currentStage = 0;
+    let maxUnlockedStage = 1; // Tracks progress to restrict jump access to cleared rooms only
 
     // Room 1 Validation Logic
     function checkRoom1Option(optionIndex) {
@@ -749,6 +759,7 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
         fb.className = 'feedback-alert success';
         fb.innerText = '✓ Correct! Te Moko-ika-a-hiku-waru identified as the guardian spirit of Te Wai-o-Taiki/Tāmaki River. Room 2 access granted.';
         nextAction.style.display = 'flex';
+        updateUnlockedStage(2);
       } else {
         document.getElementById(`opt-btn-${optionIndex}`).style.borderColor = 'var(--cd-orange)';
         fb.className = 'feedback-alert error';
@@ -857,10 +868,26 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
         fb.className = 'feedback-alert success';
         fb.innerText = '✓ ACCESS GRANTED: Pikorua symbol verified. Pumping stations recalibrated. Proceed to Stage 3.';
         nextAction.style.display = 'flex';
+        updateUnlockedStage(3);
       } else {
         fb.className = 'feedback-alert error';
         fb.innerText = '✖ ACCESS DENIED: Invalid symbol code. Re-examine the chart and try again.';
         nextAction.style.display = 'none';
+      }
+    }
+
+    // Updates highest unlocked stage index
+    function updateUnlockedStage(stageNum) {
+      if (stageNum > maxUnlockedStage) {
+        maxUnlockedStage = stageNum;
+      }
+    }
+
+    // Interactive Dot Navigation
+    function jumpToStage(targetStage) {
+      // Allows navigation to any stage that has already been reached or cleared
+      if (targetStage <= maxUnlockedStage) {
+        nextStage(targetStage);
       }
     }
 
@@ -869,6 +896,8 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
       document.getElementById(`stage-${currentStage}`).classList.remove('active');
       currentStage = stageNumber;
       
+      updateUnlockedStage(currentStage);
+
       const activeStage = document.getElementById(`stage-${currentStage}`);
       activeStage.classList.add('active');
 
@@ -877,22 +906,12 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
       else if(currentStage === 6) stageLabel.innerText = 'SYS_ID: ESCAPE_COMPLETE';
       else stageLabel.innerText = `SYS_ID: OVERRIDE_ROOM_0${currentStage}`;
 
+      // Refresh footer dots state
       for (let i = 1; i <= 5; i++) {
         const dot = document.getElementById(`dot-${i}`);
-        if (i < currentStage) {
+        if (i < currentStage || i < maxUnlockedStage) {
           dot.className = 'step-dot completed';
         } else if (i === currentStage) {
           dot.className = 'step-dot current';
         } else {
           dot.className = 'step-dot';
-        }
-      }
-
-      if(currentStage === 6) {
-        document.getElementById('system-status').className = 'indicator';
-        document.getElementById('status-text').innerText = 'SYSTEM SECURE';
-      }
-    }
-  </script>
-</body>
-</html>
