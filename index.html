@@ -226,24 +226,45 @@
         </section>
 
         <!-- STAGE 2: CONTROL CENTRE -->
-        <section id="stage-2" class="stage-container hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div class="flex items-center gap-2">
-                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded font-mono text-xs font-bold">ROOM 2</span>
-                        <h2 class="text-lg font-bold text-white">MAIN CONTROL CENTRE // DEFENCE OVERRIDE</h2>
-                    </div>
-                    <span class="text-xs text-slate-400 font-mono">SECTOR LOCKDOWN</span>
-                </div>
-                <p class="text-slate-300 text-sm">Analyze tactical data from Room 1 to bypass security protocols.</p>
-                <div class="p-4 bg-slate-950 rounded-lg border border-slate-800 font-mono text-xs text-amber-400">
-                    [SYSTEM READY FOR DATA ENTRY]
-                </div>
-                <div class="flex justify-between items-center pt-4">
-                    <button onclick="goToStage(1)" class="text-slate-400 hover:text-white font-mono text-xs">← Back to Room 1</button>
-                    <button onclick="goToStage(3)" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-3 rounded-lg shadow-lg">ENTER ROOM 3: RECTIFICATION BAY →</button>
-                </div>
+  <section id="stage-2" class="stage">
+          <div>
+            <h2>Stage 2: Estuarine Mapping & Symbol Analysis</h2>
+            
+            <!-- 1. TEXT BOX BRIEFING AT THE TOP -->
+            <div class="briefing-box">
+              <div class="briefing-title">Tactical Briefing Directive</div>
+              Emergency response teams have uncovered an ancient navigational chart detailing the estuarine channels. Use the interactive viewer below to zoom in and drag across the map. Locate the hidden traditional symbol that represents the eternal bond and flow of the waterways, and enter its exact traditional name to override the security lock.
             </div>
+
+            <!-- 2. INTERACTIVE ZOOMABLE IMAGE CONTAINER -->
+            <div class="zoom-viewer-container">
+              <div class="zoom-viewport" id="zoom-viewport">
+                <img id="zoom-image" class="zoom-image" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&q=80" alt="Estuarine Map Evidence" />
+              </div>
+              <div class="zoom-controls">
+                <button class="ctrl-btn" onclick="zoomIn()">[ + ]</button>
+                <button class="ctrl-btn" onclick="zoomOut()">[ - ]</button>
+                <button class="ctrl-btn" onclick="resetZoom()">[ ↺ RESET ]</button>
+              </div>
+            </div>
+
+            <!-- 3. INPUT TEXT BOX FOR CODE OVERRIDE -->
+            <div class="answer-box">
+              <label for="room2-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
+                Enter Hidden Symbol Override Code:
+              </label>
+              <div class="input-group">
+                <input type="text" id="room2-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" />
+                <button class="btn" onclick="checkRoom2Answer()">SUBMIT CODE</button>
+              </div>
+              <div id="r2-feedback" class="feedback-alert"></div>
+            </div>
+          </div>
+
+          <!-- ACTION ZONE UNLOCKED AFTER ANSWERING "Pikorua" -->
+          <div class="action-zone" id="r2-next-action" style="display: none;">
+            <button class="btn btn-danger" onclick="nextStage(3)">ENTER ROOM 3: COMMUNICATIONS →</button>
+          </div>
         </section>
 
         <!-- STAGE 3: RECTIFICATION BAY -->
