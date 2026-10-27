@@ -226,46 +226,42 @@
         </section>
 
         <!-- STAGE 2: CONTROL CENTRE -->
-        <section id="stage-2" class="stage">
-                  <div>
-                    <h2>Stage 2: Estuarine Mapping & Symbol Analysis</h2>
+<section id="stage-2" class="stage">
+          <div>
+            <h2>Stage 2: Estuarine Mapping & Symbol Analysis</h2>
             
-                    <!-- 1. TEXT BOX BRIEFING AT THE TOP -->
-                    <div class="briefing-box">
-                      <div class="briefing-title">Tactical Briefing Directive</div>
-                      Emergency response teams have uncovered an ancient navigational chart detailing the estuarine channels. Use the interactive viewer below to zoom in and drag across the map. Locate the hidden traditional symbol that represents the eternal bond and flow of the waterways, and enter its exact traditional name to override the security lock.
-                    </div>
+            <div class="briefing-box">
+              <div class="briefing-title">Tactical Briefing Directive</div>
+              Emergency response teams have uncovered an ancient navigational chart detailing the estuarine channels. Use the interactive viewer below to zoom in and drag across the map. Locate the hidden traditional symbol that represents the eternal bond and flow of the waterways, and enter its exact traditional name to override the security lock.
+            </div>
 
-            <!-- 2. INTERACTIVE ZOOMABLE IMAGE CONTAINER -->
-                    <div class="zoom-viewer-container">
-                      <div class="zoom-viewport" id="zoom-viewport">
-                        <img id="zoom-image" class="zoom-image" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&q=80" alt="Estuarine Map Evidence" />
-                      </div>
-                      <div class="zoom-controls">
-                        <button class="ctrl-btn" onclick="zoomIn()">[ + ]</button>
-                        <button class="ctrl-btn" onclick="zoomOut()">[ - ]</button>
-                        <button class="ctrl-btn" onclick="resetZoom()">[ ↺ RESET ]</button>
-                      </div>
-                    </div>
+            <div class="zoom-viewer-container">
+              <div class="zoom-viewport" id="zoom-viewport">
+                <img id="zoom-image" class="zoom-image" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&q=80" alt="Estuarine Map Evidence" />
+              </div>
+              <div class="zoom-controls">
+                <button class="ctrl-btn" onclick="zoomIn()">[ + ]</button>
+                <button class="ctrl-btn" onclick="zoomOut()">[ - ]</button>
+                <button class="ctrl-btn" onclick="resetZoom()">[ ↺ RESET ]</button>
+              </div>
+            </div>
 
-            <!-- 3. INPUT TEXT BOX FOR CODE OVERRIDE -->
-                    <div class="answer-box">
-                      <label for="room2-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
-                        Enter Hidden Symbol Override Code:
-                      </label>
-                      <div class="input-group">
-                        <input type="text" id="room2-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" />
-                        <button class="btn" onclick="checkRoom2Answer()">SUBMIT CODE</button>
-                      </div>
-                      <div id="r2-feedback" class="feedback-alert"></div>
-                    </div>
-                  </div>
+            <div class="answer-box">
+              <label for="room2-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow); text-transform: uppercase;">
+                Enter Hidden Symbol Override Code:
+              </label>
+              <div class="input-group">
+                <input type="text" id="room2-answer" class="text-input" placeholder="Type answer here..." autocomplete="off" />
+                <button class="btn" onclick="checkRoom2Answer()">SUBMIT CODE</button>
+              </div>
+              <div id="r2-feedback" class="feedback-alert"></div>
+            </div>
+          </div>
 
-          <!-- ACTION ZONE UNLOCKED AFTER ANSWERING "Pikorua" -->
-                  <div class="action-zone" id="r2-next-action" style="display: none;">
-                    <button class="btn btn-danger" onclick="nextStage(3)">ENTER ROOM 3: COMMUNICATIONS →</button>
-                  </div>
-                </section>
+          <div class="action-zone" id="r2-next-action" style="display: none;">
+            <button class="btn btn-danger" onclick="nextStage(3)">ENTER ROOM 3: COMMUNICATIONS →</button>
+          </div>
+        </section>
         <!-- STAGE 3: RECTIFICATION BAY -->
                 <section id="stage-3" class="stage-container hidden space-y-6">
                     <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-4">
