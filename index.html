@@ -285,7 +285,7 @@
       white-space: pre-line;
     }
 
-    /* ROOM 2 ZOOMABLE IMAGE CONTAINER */
+    /* ROOM 2 ZOOMABLE IMAGE CONTAINER WITH HARD EDGE BOUNDARIES */
     .zoom-viewer-container {
       position: relative;
       width: 100%;
@@ -314,6 +314,9 @@
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       transform-origin: 0 0;
       transition: transform 0.05s ease-out;
       pointer-events: none;
@@ -727,7 +730,7 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
     </div>
   </footer>
 
-  <!-- ENGINE NAVIGATION SCRIPT -->
+  <!-- ENGINE NAVIGATION & PUZZLE SCRIPT -->
   <script>
     let currentStage = 0;
 
@@ -754,7 +757,7 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
       }
     }
 
-    // Room 2 Interactive Pan/Zoom Controller
+    // Room 2 Interactive Pan/Zoom Controller with Strict Clamped Boundaries
     let zoomScale = 1;
     let panX = 0;
     let panY = 0;
@@ -765,7 +768,23 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
     const viewport = document.getElementById('zoom-viewport');
     const img = document.getElementById('zoom-image');
 
+    // Hard Boundary Clamping Function: Prevents viewing past image edges
+    function clampBoundaries() {
+      const containerWidth = viewport.clientWidth;
+      const containerHeight = viewport.clientHeight;
+
+      const scaledWidth = containerWidth * zoomScale;
+      const scaledHeight = containerHeight * zoomScale;
+
+      const minX = containerWidth - scaledWidth;
+      const minY = containerHeight - scaledHeight;
+
+      panX = Math.min(0, Math.max(minX, panX));
+      panY = Math.min(0, Math.max(minY, panY));
+    }
+
     function updateTransform() {
+      clampBoundaries();
       img.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
     }
 
@@ -776,7 +795,10 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
 
     function zoomOut() {
       zoomScale = Math.max(zoomScale - 0.4, 1);
-      if (zoomScale === 1) { panX = 0; panY = 0; }
+      if (zoomScale === 1) { 
+        panX = 0; 
+        panY = 0; 
+      }
       updateTransform();
     }
 
@@ -788,6 +810,7 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
     }
 
     viewport.addEventListener('mousedown', (e) => {
+      if (zoomScale <= 1) return;
       isDragging = true;
       startX = e.clientX - panX;
       startY = e.clientY - panY;
@@ -800,9 +823,12 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
       updateTransform();
     });
 
-    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mouseup', () => { 
+      isDragging = false; 
+    });
 
     viewport.addEventListener('touchstart', (e) => {
+      if (zoomScale <= 1) return;
       if (e.touches.length === 1) {
         isDragging = true;
         startX = e.touches[0].clientX - panX;
@@ -817,7 +843,9 @@ Background: Horotiu is the ancient guardian spirit of the valley that forms the 
       updateTransform();
     });
 
-    window.addEventListener('touchend', () => { isDragging = false; });
+    window.addEventListener('touchend', () => { 
+      isDragging = false; 
+    });
 
     // Room 2 Answer Validation Logic
     function checkRoom2Answer() {
