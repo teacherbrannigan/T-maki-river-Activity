@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>NZ CIVIL DEFENCE // SUB-SURFACE BUNKER SYSTEM</title>
+  
+  <!-- A-Frame Library for 360 VR AR Environment -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
   <style>
     :root {
       --cd-yellow: #ffcc00;
@@ -903,7 +907,7 @@
               [ ↺ RESET & RESHUFFLE BOARD ]
             </button>
 
-            <!-- ANSWER BOX & AR IMAGE REVEAL -->
+            <!-- ANSWER BOX & VR/AR IMAGE REVEAL -->
             <div class="answer-box">
               <label for="room4-answer" style="font-size: 0.9rem; font-weight: bold; color: var(--cd-yellow);">
                 ENTER 4-DIGIT RELAY CODE:
@@ -914,9 +918,9 @@
               </div>
               <div id="r4-feedback" class="feedback-alert"></div>
 
-              <div id="r4-ar-container" style="display: none; margin-top: 16px; border: 2px solid var(--cd-green); border-radius: 6px; padding: 12px; background: rgba(0, 255, 102, 0.05); text-align: center;">
-                 <p style="color: var(--cd-green); font-weight: bold; margin-top: 0; margin-bottom: 12px;">AR DATA DECRYPTED</p>
-                 <img src="./Blockhouse-ar.jpg" alt="AR Blockhouse Imagery" style="width: 100%; border: 1px solid var(--cd-green); border-radius: 4px;" />
+              <!-- DYNAMIC A-FRAME 360 VR VIEWER CONTAINER -->
+              <div id="r4-ar-container" style="display: none; margin-top: 16px; text-align: center;">
+                <!-- Injected via JavaScript upon correct code -->
               </div>
             </div>
           </div>
@@ -970,16 +974,16 @@
                 <div class="taonga-title">Option 4: Ngāti Whātua Ōrākei</div>
               </div>
               <div class="taonga-card r5-card" id="r5-card-5" style="justify-content: center; height: 80px;" onclick="selectIwiOption(5)">
-                <div class="taonga-title">Option 5: New Zealand Settlement Company</div>
+                <div class="taonga-title">Option 5: Te Wai-o-Hua</div>
               </div>
               <div class="taonga-card r5-card" id="r5-card-6" style="justify-content: center; height: 80px;" onclick="selectIwiOption(6)">
-                <div class="taonga-title">Option 6: Auckland Musium of Natural History</div>
+                <div class="taonga-title">Option 6: Ngāti Te Ata</div>
               </div>
             </div>
 
             <!-- MATH RECOVERY STAGE 5 -->
             <div id="r5-math-panel" class="math-panel">
-              <div style="color: var(--cd-orange); font-weight: bold; font-size: 0.95rem;">⚠ LOCKOUT ACTIVE: RECALIBRATION REQUIRED</div>
+              <div style="color: var(--cd-orange); font-weight: bold; font-size: 0.95rem;">⚠ LOCKOUT ACTIVE: BUNKER RECALIBRATION REQUIRED</div>
               <p style="margin: 0; font-size: 0.85rem;">Solve 5 math equations to earn 1 reserve attempt.</p>
               <div style="display: flex; justify-content: space-between;">
                 <span id="r5-math-progress" style="color: var(--cd-yellow); font-size: 0.85rem; font-weight: bold;">SOLVED: 0 / 5</span>
@@ -996,7 +1000,7 @@
           </div>
 
           <div class="action-zone" id="r5-next-action" style="display: none;">
-            <button class="btn btn-danger" type="button" onclick="nextStage(6)">FINISH →</button>
+            <button class="btn btn-danger" type="button" onclick="nextStage(6)">PROCEED TO AIRLOCK →</button>
           </div>
         </section>
 
@@ -1005,14 +1009,14 @@
         ======================================================== -->
         <section id="stage-6" class="stage">
           <div>
-            <h1 style="color: var(--cd-green);">Mission complete</h1>
-            <p><strong>PRIMARY MISSION COMPLETE.</strong></p>
-            <p>Well done! we can talk to the Iwi to get the Taonga and talk with the Taniwha to find out why he is causing all this destuction after all these years. Maybe we can have him stay? who knows? In ether case thank you for you work here today.</p>
+            <h1 style="color: var(--cd-green);">Bunker Unsealed!</h1>
+            <p><strong>SYSTEM OVERRIDE COMPLETE.</strong></p>
+            <p>The blast doors have been retracted. Surface evacuation route is now clear. Please review the final commander broadcast and submit your debrief.</p>
             
             <div class="media-container">
               <div class="video-wrapper">
                 <video controls playsinline webkit-playsinline preload="metadata">
-                  <source src="./Tāmaki-River-Video-End.mp4" type="video/mp4">
+                  <source src="./conclusion_video.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -1486,6 +1490,22 @@
       if (input === '3946') {
         fb.className = 'feedback-alert success';
         fb.innerText = '✓ DECRYPTION SUCCESS: 3946 accepted. AR Image Feed online.';
+        
+        // Dynamically inject the A-Frame element to prevent canvas sizing bugs while hidden
+        if (!arContainer.innerHTML.includes('a-scene')) {
+            arContainer.innerHTML = `
+              <div style="border: 2px solid var(--cd-green); border-radius: 6px; padding: 12px; background: rgba(0, 255, 102, 0.05); text-align: center;">
+                 <p style="color: var(--cd-green); font-weight: bold; margin-top: 0; margin-bottom: 12px;">AR DATA DECRYPTED (DRAG TO EXPLORE OR CLICK VR ICON)</p>
+                 <div style="width: 100%; height: 320px; border: 1px solid var(--cd-green); border-radius: 4px; overflow: hidden; position: relative;">
+                    <a-scene embedded vr-mode-ui="enabled: true">
+                       <a-sky src="./Blockhouse-ar.jpg" rotation="0 -90 0"></a-sky>
+                       <a-entity camera look-controls position="0 1.6 0"></a-entity>
+                    </a-scene>
+                 </div>
+              </div>
+            `;
+        }
+
         arContainer.style.display = 'block';
         nextAction.style.display = 'flex';
         updateUnlockedStage(5);
@@ -1593,16 +1613,12 @@
       const activeStage = document.getElementById(`stage-${currentStage}`);
       if (activeStage) activeStage.classList.add('active');
 
-      // Trigger initialization for puzzle stages AFTER making them active
+      // Trigger initialization for puzzle stages only AFTER rendering frame
       if (currentStage === 4) {
           setTimeout(() => {
-              if (!r4_initialized) { 
-                  r4_initGame(); 
-                  r4_initialized = true; 
-              } else { 
-                  r4_handleResize(); 
-              }
-          }, 50); // slight delay ensures DOM layout (clientWidth) is calculated
+              if (!r4_initialized) { r4_initGame(); r4_initialized = true; } 
+              else { r4_handleResize(); }
+          }, 50);
       }
 
       const stageLabel = document.getElementById('stage-id');
